@@ -224,6 +224,92 @@
       }
     }
 
+    /* Bouton de connexion doré avec animations */
+    .login-btn-gold {
+      background: linear-gradient(135deg, 
+        rgba(251, 191, 36, 0.9) 0%, 
+        rgba(245, 158, 11, 0.9) 50%, 
+        rgba(251, 191, 36, 0.9) 100%
+      );
+      background-size: 200% 200%;
+      border: 2px solid rgba(251, 191, 36, 1);
+      color: #1e293b;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      box-shadow: 
+        0 0 20px rgba(251, 191, 36, 0.5),
+        0 0 40px rgba(251, 191, 36, 0.3),
+        0 4px 20px rgba(0, 0, 0, 0.4);
+      animation: goldPulse 3s ease-in-out infinite, goldShine 4s linear infinite;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .login-btn-gold:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 
+        0 0 30px rgba(251, 191, 36, 0.7),
+        0 0 60px rgba(251, 191, 36, 0.5),
+        0 8px 30px rgba(0, 0, 0, 0.5);
+      border-color: rgba(255, 215, 0, 1);
+    }
+
+    @keyframes goldPulse {
+      0%, 100% {
+        box-shadow: 
+          0 0 20px rgba(251, 191, 36, 0.5),
+          0 0 40px rgba(251, 191, 36, 0.3),
+          0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+      50% {
+        box-shadow: 
+          0 0 30px rgba(251, 191, 36, 0.7),
+          0 0 60px rgba(251, 191, 36, 0.5),
+          0 4px 25px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    @keyframes goldShine {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slideInRight {
+      animation: slideInRight 0.6s ease-out forwards;
+    }
+
+    .animate-slideInDown {
+      animation: slideInDown 0.3s ease-out forwards;
+    }
+
     .logo-particles {
       position: absolute;
       width: 100%;
@@ -310,6 +396,157 @@
       fill: none;
       filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.7));
       animation: waveMove 28s linear infinite reverse, waveFloat 11s ease-in-out infinite 3s;
+    }
+
+    /* Thèmes de couleurs pour les vagues */
+    /* Violet Rosé (défaut) */
+    .wave-container.theme-purple-pink {
+      background: linear-gradient(135deg, #000000 0%, #1a0a2e 50%, #0f0520 100%);
+    }
+    .theme-purple-pink .wave-path-1 {
+      stroke: rgba(168, 85, 247, 0.7);
+      filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.9));
+    }
+    .theme-purple-pink .wave-path-2 {
+      stroke: rgba(236, 72, 153, 0.6);
+      filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.8));
+    }
+    .theme-purple-pink .wave-path-3 {
+      stroke: rgba(147, 51, 234, 0.5);
+      filter: drop-shadow(0 0 18px rgba(147, 51, 234, 0.7));
+    }
+    .theme-purple-pink .wave-path-4 {
+      stroke: rgba(219, 39, 119, 0.45);
+      filter: drop-shadow(0 0 22px rgba(219, 39, 119, 0.7));
+    }
+    .theme-purple-pink .wave-path-5 {
+      stroke: rgba(192, 132, 252, 0.5);
+      filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.7));
+    }
+
+    /* Cyan Bleuté */
+    .wave-container.theme-cyan-blue {
+      background: linear-gradient(135deg, #0a0e27 0%, #0f2027 50%, #203a43 100%);
+    }
+    .theme-cyan-blue .wave-path-1 {
+      stroke: rgba(79, 172, 254, 0.7);
+      filter: drop-shadow(0 0 20px rgba(79, 172, 254, 0.9));
+    }
+    .theme-cyan-blue .wave-path-2 {
+      stroke: rgba(0, 242, 254, 0.6);
+      filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.8));
+    }
+    .theme-cyan-blue .wave-path-3 {
+      stroke: rgba(102, 126, 234, 0.5);
+      filter: drop-shadow(0 0 18px rgba(102, 126, 234, 0.7));
+    }
+    .theme-cyan-blue .wave-path-4 {
+      stroke: rgba(0, 200, 254, 0.45);
+      filter: drop-shadow(0 0 22px rgba(0, 200, 254, 0.7));
+    }
+    .theme-cyan-blue .wave-path-5 {
+      stroke: rgba(140, 200, 255, 0.5);
+      filter: drop-shadow(0 0 20px rgba(140, 200, 255, 0.7));
+    }
+
+    /* Bleu Lavande */
+    .wave-container.theme-blue-purple {
+      background: linear-gradient(135deg, #0a0520 0%, #330867 50%, #203550 100%);
+    }
+    .theme-blue-purple .wave-path-1 {
+      stroke: rgba(48, 207, 208, 0.7);
+      filter: drop-shadow(0 0 20px rgba(48, 207, 208, 0.9));
+    }
+    .theme-blue-purple .wave-path-2 {
+      stroke: rgba(51, 8, 103, 0.6);
+      filter: drop-shadow(0 0 25px rgba(51, 8, 103, 0.8));
+    }
+    .theme-blue-purple .wave-path-3 {
+      stroke: rgba(102, 126, 234, 0.5);
+      filter: drop-shadow(0 0 18px rgba(102, 126, 234, 0.7));
+    }
+    .theme-blue-purple .wave-path-4 {
+      stroke: rgba(30, 180, 200, 0.45);
+      filter: drop-shadow(0 0 22px rgba(30, 180, 200, 0.7));
+    }
+    .theme-blue-purple .wave-path-5 {
+      stroke: rgba(100, 150, 220, 0.5);
+      filter: drop-shadow(0 0 20px rgba(100, 150, 220, 0.7));
+    }
+
+    /* Pêche Rosé */
+    .wave-container.theme-peach-pink {
+      background: linear-gradient(135deg, #2a1810 0%, #3a2520 50%, #2a1a15 100%);
+    }
+    .theme-peach-pink .wave-path-1 {
+      stroke: rgba(255, 236, 210, 0.7);
+      filter: drop-shadow(0 0 20px rgba(255, 236, 210, 0.9));
+    }
+    .theme-peach-pink .wave-path-2 {
+      stroke: rgba(252, 182, 159, 0.6);
+      filter: drop-shadow(0 0 25px rgba(252, 182, 159, 0.8));
+    }
+    .theme-peach-pink .wave-path-3 {
+      stroke: rgba(255, 200, 180, 0.5);
+      filter: drop-shadow(0 0 18px rgba(255, 200, 180, 0.7));
+    }
+    .theme-peach-pink .wave-path-4 {
+      stroke: rgba(250, 170, 150, 0.45);
+      filter: drop-shadow(0 0 22px rgba(250, 170, 150, 0.7));
+    }
+    .theme-peach-pink .wave-path-5 {
+      stroke: rgba(255, 220, 200, 0.5);
+      filter: drop-shadow(0 0 20px rgba(255, 220, 200, 0.7));
+    }
+
+    /* Lavande Rose */
+    .wave-container.theme-lavender-rose {
+      background: linear-gradient(135deg, #1a0a20 0%, #2a1530 50%, #1f0a25 100%);
+    }
+    .theme-lavender-rose .wave-path-1 {
+      stroke: rgba(252, 203, 144, 0.7);
+      filter: drop-shadow(0 0 20px rgba(252, 203, 144, 0.9));
+    }
+    .theme-lavender-rose .wave-path-2 {
+      stroke: rgba(213, 126, 235, 0.6);
+      filter: drop-shadow(0 0 25px rgba(213, 126, 235, 0.8));
+    }
+    .theme-lavender-rose .wave-path-3 {
+      stroke: rgba(230, 160, 200, 0.5);
+      filter: drop-shadow(0 0 18px rgba(230, 160, 200, 0.7));
+    }
+    .theme-lavender-rose .wave-path-4 {
+      stroke: rgba(200, 110, 220, 0.45);
+      filter: drop-shadow(0 0 22px rgba(200, 110, 220, 0.7));
+    }
+    .theme-lavender-rose .wave-path-5 {
+      stroke: rgba(240, 180, 210, 0.5);
+      filter: drop-shadow(0 0 20px rgba(240, 180, 210, 0.7));
+    }
+
+    /* Océan Violet */
+    .wave-container.theme-purple-ocean {
+      background: linear-gradient(135deg, #0a1520 0%, #152030 50%, #1a2535 100%);
+    }
+    .theme-purple-ocean .wave-path-1 {
+      stroke: rgba(168, 237, 234, 0.7);
+      filter: drop-shadow(0 0 20px rgba(168, 237, 234, 0.9));
+    }
+    .theme-purple-ocean .wave-path-2 {
+      stroke: rgba(254, 214, 227, 0.6);
+      filter: drop-shadow(0 0 25px rgba(254, 214, 227, 0.8));
+    }
+    .theme-purple-ocean .wave-path-3 {
+      stroke: rgba(180, 220, 240, 0.5);
+      filter: drop-shadow(0 0 18px rgba(180, 220, 240, 0.7));
+    }
+    .theme-purple-ocean .wave-path-4 {
+      stroke: rgba(200, 180, 230, 0.45);
+      filter: drop-shadow(0 0 22px rgba(200, 180, 230, 0.7));
+    }
+    .theme-purple-ocean .wave-path-5 {
+      stroke: rgba(200, 230, 240, 0.5);
+      filter: drop-shadow(0 0 20px rgba(200, 230, 240, 0.7));
     }
 
     @keyframes particleFloat {
@@ -1148,6 +1385,8 @@
     // État de l'application
     let state = {
       isLoading: true,
+      showLoginChoice: false,
+      loginEmail: '', // Email pour vérifier le rôle autorisé
       currentUser: null,
       currentPage: 'login',
       showPublicLanding: true,
@@ -1299,10 +1538,31 @@
         theme: 'dark', // 'dark', 'blue', 'purple', 'green', 'red'
         fontFamily: 'montserrat', // 'montserrat', 'inter', 'roboto', 'poppins', 'sora'
         backgroundScheme: 'amber', // 'amber', 'blue', 'purple', 'green', 'cyan', 'rose'
+        backgroundTheme: 'purple-pink', // Nouveau thème de fond
       },
       // Gestion des collaborateurs
       teamMembers: [
-        // Exemples de collaborateurs (vides par défaut)
+        // Exemples de collaborateurs invités
+        { 
+          id: 1, 
+          name: 'Agent Commercial', 
+          email: 'agent@agence.com', 
+          role: 'agent', 
+          phone: '+33 6 12 34 56 78',
+          status: 'active',
+          invitedBy: 'Philippe Rousseau',
+          invitedAt: '2026-01-15'
+        },
+        { 
+          id: 2, 
+          name: 'Julie Martin', 
+          email: 'julie.martin@agence.com', 
+          role: 'agent', 
+          phone: '+33 6 23 45 67 89',
+          status: 'active',
+          invitedBy: 'Philippe Rousseau',
+          invitedAt: '2026-01-20'
+        }
       ],
       showAddMember: false,
       newMember: {
@@ -1509,6 +1769,7 @@
         nextBillingDate: '2026-02-29',
         amount: 99,
         paymentMethod: 'Carte •••• 4242',
+        hasUsedFreeTrial: true, // Devient true après avoir utilisé l'essai gratuit
         plans: {
           trial: {
             name: 'Essai Gratuit',
@@ -1958,6 +2219,34 @@
       render();
     }
 
+    // Fonction pour mettre à jour les inputs sans re-render (évite le rechargement à chaque lettre)
+    function updateInput(path, value) {
+      // Met à jour l'état sans re-render pour les inputs
+      const keys = path.split('.');
+      let current = state;
+      
+      for (let i = 0; i < keys.length - 1; i++) {
+        current = current[keys[i]];
+      }
+      
+      current[keys[keys.length - 1]] = value;
+    }
+
+    // Fonction pour vérifier si un email correspond à un agent invité
+    function isInvitedAgent(email) {
+      return state.teamMembers.some(member => 
+        member.email.toLowerCase() === email.toLowerCase() && 
+        member.role === 'agent'
+      );
+    }
+
+    // Fonction pour obtenir les infos d'un membre par email
+    function getMemberByEmail(email) {
+      return state.teamMembers.find(member => 
+        member.email.toLowerCase() === email.toLowerCase()
+      );
+    }
+
     // Helper: Vérifie si l'utilisateur a accès aux fonctionnalités Entreprise
     function hasEnterpriseAccess() {
       return state.subscription.currentPlan === 'enterprise' || state.subscription.currentPlan === 'trial';
@@ -2209,9 +2498,10 @@
 
     // Helper: Render animated neon background
     function renderNeonBackground() {
+      const theme = state.customization?.backgroundTheme || 'purple-pink';
       return `
         <!-- Animated Waves Background -->
-        <div class="wave-container">
+        <div class="wave-container theme-${theme}">
           <svg class="wave-svg" viewBox="0 0 2000 1000" preserveAspectRatio="none">
             <!-- Wave 1 - Purple -->
             <path class="wave-path-1" d="M 0 500 Q 250 300, 500 500 T 1000 500 T 1500 500 T 2000 500" />
@@ -2479,7 +2769,7 @@
               <div>
                 <label class="block text-slate-300 font-semibold mb-2">Description *</label>
                 <textarea
-                  oninput="setState({newIntervention: {...state.newIntervention, description: event.target.value}})"
+                  onchange="setState({newIntervention: {...state.newIntervention, description: event.target.value}})"
                   placeholder="Décrivez l'intervention nécessaire..."
                   rows="3"
                   class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
@@ -2491,7 +2781,7 @@
                 <label class="block text-slate-300 font-semibold mb-2">Coût estimé (€)</label>
                 <input
                   type="number"
-                  oninput="setState({newIntervention: {...state.newIntervention, cost: event.target.value}})"
+                  onchange="setState({newIntervention: {...state.newIntervention, cost: event.target.value}})"
                   value="${state.newIntervention.cost}"
                   placeholder="Ex: 450"
                   class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
@@ -2596,7 +2886,7 @@
                 <label class="block text-slate-300 font-semibold mb-2">Sujet *</label>
                 <input
                   type="text"
-                  oninput="setState({newMessage: {...state.newMessage, subject: event.target.value}})"
+                  onchange="setState({newMessage: {...state.newMessage, subject: event.target.value}})"
                   value="${state.newMessage.subject}"
                   placeholder="Ex: Travaux ascenseur prévus"
                   class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -2607,7 +2897,7 @@
               <div>
                 <label class="block text-slate-300 font-semibold mb-2">Message *</label>
                 <textarea
-                  oninput="setState({newMessage: {...state.newMessage, message: event.target.value}})"
+                  onchange="setState({newMessage: {...state.newMessage, message: event.target.value}})"
                   placeholder="Rédigez votre message aux copropriétaires..."
                   rows="6"
                   class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
@@ -2671,7 +2961,7 @@
                 <label class="block text-slate-300 font-semibold mb-2">Appartement *</label>
                 <input
                   type="text"
-                  oninput="setState({newSignalement: {...state.newSignalement, apartment: event.target.value}})"
+                  onchange="setState({newSignalement: {...state.newSignalement, apartment: event.target.value}})"
                   placeholder="Ex: Appt 12, Bât A - 3ème étage"
                   value="${state.newSignalement.apartment || ''}"
                   class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-400"
@@ -2722,7 +3012,7 @@
               <div>
                 <label class="block text-slate-300 font-semibold mb-2">Description *</label>
                 <textarea
-                  oninput="setState({newSignalement: {...state.newSignalement, description: event.target.value}})"
+                  onchange="setState({newSignalement: {...state.newSignalement, description: event.target.value}})"
                   placeholder="Décrivez le problème en détail..."
                   rows="4"
                   class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-400 resize-none"
@@ -2779,7 +3069,7 @@
               <div>
                 <label class="block text-slate-300 font-semibold mb-2">💼 Commentaire interne syndic</label>
                 <textarea
-                  oninput="setState({newSignalement: {...state.newSignalement, syndicComment: event.target.value}})"
+                  onchange="setState({newSignalement: {...state.newSignalement, syndicComment: event.target.value}})"
                   placeholder="Notes privées du syndic (non visible par les copropriétaires)..."
                   rows="3"
                   class="w-full px-4 py-3 bg-slate-800/50 border border-amber-500/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
@@ -3646,7 +3936,7 @@ Le Syndic</textarea>
                   <input
                     type="text"
                     value="${state.registrationData.companyName}"
-                    oninput="setState({registrationData: {...state.registrationData, companyName: event.target.value}})"
+                    onchange="setState({registrationData: {...state.registrationData, companyName: event.target.value}})"
                     placeholder="Agence Immobilière Provence"
                     class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                   />
@@ -3658,7 +3948,7 @@ Le Syndic</textarea>
                     <input
                       type="text"
                       value="${state.registrationData.name}"
-                      oninput="setState({registrationData: {...state.registrationData, name: event.target.value}})"
+                      onchange="setState({registrationData: {...state.registrationData, name: event.target.value}})"
                       placeholder="Jean Dupont"
                       class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
@@ -3668,7 +3958,7 @@ Le Syndic</textarea>
                     <input
                       type="tel"
                       value="${state.registrationData.phone}"
-                      oninput="setState({registrationData: {...state.registrationData, phone: event.target.value}})"
+                      onchange="setState({registrationData: {...state.registrationData, phone: event.target.value}})"
                       placeholder="+33 6 12 34 56 78"
                       class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
@@ -3680,7 +3970,7 @@ Le Syndic</textarea>
                   <input
                     type="email"
                     value="${state.registrationData.email}"
-                    oninput="setState({registrationData: {...state.registrationData, email: event.target.value}})"
+                    onchange="setState({registrationData: {...state.registrationData, email: event.target.value}})"
                     placeholder="contact@agence.com"
                     class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                   />
@@ -3691,7 +3981,7 @@ Le Syndic</textarea>
                   <input
                     type="password"
                     value="${state.registrationData.password}"
-                    oninput="setState({registrationData: {...state.registrationData, password: event.target.value}})"
+                    onchange="setState({registrationData: {...state.registrationData, password: event.target.value}})"
                     placeholder="••••••••"
                     class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                   />
@@ -4116,7 +4406,7 @@ Le Syndic</textarea>
                     <input
                       type="text"
                       value="${state.newMessage.subject}"
-                      oninput="setState({newMessage: {...state.newMessage, subject: event.target.value}})"
+                      onchange="setState({newMessage: {...state.newMessage, subject: event.target.value}})"
                       placeholder="Sujet du message..."
                       class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
@@ -4127,7 +4417,7 @@ Le Syndic</textarea>
                     <label class="block text-white font-semibold mb-2">Message</label>
                     <textarea
                       value="${state.newMessage.message}"
-                      oninput="setState({newMessage: {...state.newMessage, message: event.target.value}})"
+                      onchange="setState({newMessage: {...state.newMessage, message: event.target.value}})"
                       placeholder="Écrivez votre message ici..."
                       rows="8"
                       class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
@@ -4845,45 +5135,6 @@ Le Syndic</textarea>
           </div>
           ` : ''}
 
-          <div class="glass rounded-2xl p-6">
-            <div class="flex justify-between items-center mb-6">
-              <h3 class="text-xl font-bold text-white">Biens récents</h3>
-              <button onclick="setState({currentPage: 'properties'})" class="text-amber-400 hover:text-amber-300 text-sm font-semibold">
-                Voir tout →
-              </button>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              ${state.properties.slice(0, 3).map(property => {
-                const statusColors = {
-                  'Disponible': 'bg-green-500/20 text-green-400',
-                  'Sous offre': 'bg-yellow-500/20 text-yellow-400',
-                  'Vendu': 'bg-blue-500/20 text-blue-400'
-                };
-                return `
-                  <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 hover:border-amber-400/50 transition-all cursor-pointer">
-                    <div class="text-4xl mb-3">${property.image}</div>
-                    <h4 class="text-white font-semibold mb-2">${property.title}</h4>
-                    <div class="flex items-center gap-2 text-amber-400 font-bold text-lg mb-3">
-                      ${property.price.toLocaleString()} <span class="text-xl">€</span>
-                    </div>
-                    <div class="flex items-center gap-4 text-slate-400 text-sm mb-3">
-                      <div class="flex items-center gap-1">
-                        ${icons.maximize}
-                        ${property.surface}m²
-                      </div>
-                      <div class="flex items-center gap-1">
-                        ${icons.bed}
-                        ${property.rooms}
-                      </div>
-                    </div>
-                    <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${statusColors[property.status]}">
-                      ${property.status}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
         </div>
       `;
     }
@@ -5780,48 +6031,6 @@ Le Syndic</textarea>
               </div>
             </div>
 
-            <!-- Insights IA -->
-            <div class="glass rounded-2xl p-6">
-              <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                💡 Insights IA
-              </h3>
-              <div class="space-y-3">
-                <div class="p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
-                  <div class="flex items-center gap-2 mb-2">
-                    <span class="text-2xl">📈</span>
-                    <span class="text-green-400 font-bold">Opportunité Forte</span>
-                  </div>
-                  <p class="text-slate-300 text-sm">
-                    ${hotLeads.length} prospects chauds représentent <strong class="text-white">${Math.round(hotLeads.length / state.clients.length * 100)}%</strong> de votre pipeline. 
-                    Concentrez 80% de vos efforts sur ces leads.
-                  </p>
-                </div>
-
-                <div class="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
-                  <div class="flex items-center gap-2 mb-2">
-                    <span class="text-2xl">⚡</span>
-                    <span class="text-amber-400 font-bold">Action Immédiate</span>
-                  </div>
-                  <p class="text-slate-300 text-sm">
-                    ${state.clients.filter(c => c.aiScore >= 85 && c.avgResponseTime < 5).length} prospects ultra-réactifs 
-                    (<5h de délai) attendent votre appel. <strong class="text-white">Contactez-les aujourd'hui.</strong>
-                  </p>
-                </div>
-
-                <div class="p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
-                  <div class="flex items-center gap-2 mb-2">
-                    <span class="text-2xl">🔄</span>
-                    <span class="text-blue-400 font-bold">Réengagement</span>
-                  </div>
-                  <p class="text-slate-300 text-sm">
-                    ${coldLeads.length + inactiveLeads.length} prospects nécessitent une campagne de réactivation. 
-                    Automatisez le nurturing pour <strong class="text-white">optimiser votre temps.</strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Info IA -->
           <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-5">
             <div class="flex items-start gap-3">
@@ -6041,37 +6250,6 @@ Le Syndic</textarea>
             </div>
           </div>
 
-          <!-- Email Templates -->
-          <div class="glass rounded-2xl p-6">
-            <h3 class="text-xl font-bold text-white mb-4">📝 Templates Rapides</h3>
-            <div class="grid md:grid-cols-3 gap-4">
-              <button 
-                onclick="loadTemplate('quick-followup')"
-                class="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-xl text-left transition-all border border-slate-700 hover:border-blue-500"
-              >
-                <div class="text-2xl mb-2">⚡</div>
-                <div class="text-white font-bold mb-1">Suivi Rapide</div>
-                <div class="text-slate-400 text-sm">Relance après visite</div>
-              </button>
-              <button 
-                onclick="loadTemplate('new-listing')"
-                class="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-xl text-left transition-all border border-slate-700 hover:border-blue-500"
-              >
-                <div class="text-2xl mb-2">🏠</div>
-                <div class="text-white font-bold mb-1">Nouveau Bien</div>
-                <div class="text-slate-400 text-sm">Présentation immédiate</div>
-              </button>
-              <button 
-                onclick="loadTemplate('hot-lead')"
-                class="p-4 bg-slate-800/50 hover:bg-slate-800 rounded-xl text-left transition-all border border-slate-700 hover:border-blue-500"
-              >
-                <div class="text-2xl mb-2">🔥</div>
-                <div class="text-white font-bold mb-1">Prospect Chaud</div>
-                <div class="text-slate-400 text-sm">Offre personnalisée</div>
-              </button>
-            </div>
-          </div>
-
           <!-- Info Box -->
           <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-5">
             <div class="flex items-start gap-3">
@@ -6117,12 +6295,8 @@ Le Syndic</textarea>
 
           <!-- Tabs -->
           <div class="glass rounded-2xl p-2 flex gap-2 flex-wrap">
-            <button onclick="setState({toolsTab: 'multiportal'})" class='flex-1 min-w-[140px] px-4 py-3 rounded-xl font-semibold transition-all ${(state.toolsTab || "tracking") === "multiportal" ? "bg-blue-500 text-white" : "text-slate-300 hover:bg-slate-700"}'>
+            <button onclick="setState({toolsTab: 'multiportal'})" class='flex-1 min-w-[140px] px-4 py-3 rounded-xl font-semibold transition-all ${(state.toolsTab || "multiportal") === "multiportal" ? "bg-blue-500 text-white" : "text-slate-300 hover:bg-slate-700"}'>
               📡 Multi-Portails
-              <div class="text-xs opacity-70">PRO</div>
-            </button>
-            <button onclick="setState({toolsTab: 'tracking'})" class='flex-1 min-w-[140px] px-4 py-3 rounded-xl font-semibold transition-all ${state.toolsTab === "tracking" ? "bg-blue-500 text-white" : "text-slate-300 hover:bg-slate-700"}'>
-              📧 Tracking Emails
               <div class="text-xs opacity-70">PRO</div>
             </button>
             <button onclick="setState({toolsTab: 'sms'})" class='flex-1 min-w-[140px] px-4 py-3 rounded-xl font-semibold transition-all ${state.toolsTab === "sms" ? "bg-blue-500 text-white" : "text-slate-300 hover:bg-slate-700"}'>
@@ -6626,73 +6800,6 @@ Le Syndic</textarea>
               </button>
             </div>
           ` : ''}
-          ${(state.toolsTab || 'tracking') === 'tracking' && !hasProAccess() ? `
-            <!-- Tracking Email Paywall -->
-            <div class="glass rounded-2xl p-8 text-center">
-              <div class="text-6xl mb-4">🔒</div>
-              <h3 class="text-2xl font-bold text-white mb-2">Tracking Emails - PRO</h3>
-              <p class="text-slate-300 mb-6">Suivez l'ouverture et les clics de vos emails pour mieux cibler vos relances</p>
-              <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6 max-w-md mx-auto">
-                <h4 class="text-white font-semibold mb-2">✨ Fonctionnalités PRO :</h4>
-                <ul class="text-slate-300 text-sm space-y-1 text-left">
-                  <li>✓ Suivi ouverture emails en temps réel</li>
-                  <li>✓ Nombre de clics sur les liens</li>
-                  <li>✓ Détection clients engagés</li>
-                  <li>✓ Historique complet</li>
-                </ul>
-              </div>
-              <button onclick="setState({currentPage: 'subscription'})" class="btn-primary px-8 py-3 rounded-xl font-bold">
-                Passer à PRO (79€/mois)
-              </button>
-            </div>
-          ` : (state.toolsTab || 'tracking') === 'tracking' && hasProAccess() ? `
-            <!-- Email Tracking -->
-            <div class="glass rounded-2xl p-6">
-              <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                📧 Tracking des Emails Envoyés
-              </h3>
-              <div class="space-y-4">
-                ${state.emailTracking.map(email => `
-                  <div class='bg-slate-700/50 rounded-xl p-4 border ${email.opened ? "border-green-500/30" : "border-slate-600"}'>
-                    <div class="flex items-start justify-between mb-3">
-                      <div>
-                        <h4 class="text-white font-bold">${email.clientName}</h4>
-                        <p class="text-slate-300 text-sm">${email.subject}</p>
-                      </div>
-                      <span class="text-xs text-slate-400">${new Date(email.sentDate).toLocaleDateString('fr-FR')}</span>
-                    </div>
-                    <div class="grid grid-cols-4 gap-4">
-                      <div class="text-center p-3 bg-slate-800 rounded-lg">
-                        <div class="text-2xl mb-1">${email.opened ? '✅' : '⏳'}</div>
-                        <div class="text-xs text-slate-400">Ouvert</div>
-                        <div class="text-white font-bold">${email.opened ? 'Oui' : 'Non'}</div>
-                      </div>
-                      <div class="text-center p-3 bg-slate-800 rounded-lg">
-                        <div class="text-2xl mb-1">👁️</div>
-                        <div class="text-xs text-slate-400">Ouvertures</div>
-                        <div class="text-white font-bold">${email.openCount}</div>
-                      </div>
-                      <div class="text-center p-3 bg-slate-800 rounded-lg">
-                        <div class="text-2xl mb-1">${email.clicked ? '👆' : '⏳'}</div>
-                        <div class="text-xs text-slate-400">Clics</div>
-                        <div class="text-white font-bold">${email.clickCount}</div>
-                      </div>
-                      <div class="text-center p-3 bg-slate-800 rounded-lg">
-                        <div class="text-2xl mb-1">⏰</div>
-                        <div class="text-xs text-slate-400">Dernière ouverture</div>
-                        <div class="text-white font-bold text-xs">${email.lastOpened ? formatTimeSince(email.lastOpened) : '-'}</div>
-                      </div>
-                    </div>
-                    ${email.opened && email.openCount > 1 ? `
-                      <div class="mt-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-                        <p class="text-green-400 text-sm">✨ Client très engagé ! A ouvert ${email.openCount} fois</p>
-                      </div>
-                    ` : ''}
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          ` : ''}
 
           ${state.toolsTab === 'sms' && hasEnterpriseAccess() ? `
             <!-- SMS Automatiques -->
@@ -6850,22 +6957,22 @@ Le Syndic</textarea>
                   ${state.commissionSettings.type === 'percentage' ? `
                     <div>
                       <label class="block text-slate-400 text-sm mb-2">Taux vendeur (%)</label>
-                      <input type="number" value="${state.commissionSettings.sellerRate}" oninput="setState({commissionSettings: {...state.commissionSettings, sellerRate: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
+                      <input type="number" value="${state.commissionSettings.sellerRate}" onchange="setState({commissionSettings: {...state.commissionSettings, sellerRate: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
                     </div>
                     <div>
                       <label class="block text-slate-400 text-sm mb-2">Taux acquéreur (%)</label>
-                      <input type="number" value="${state.commissionSettings.buyerRate}" oninput="setState({commissionSettings: {...state.commissionSettings, buyerRate: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
+                      <input type="number" value="${state.commissionSettings.buyerRate}" onchange="setState({commissionSettings: {...state.commissionSettings, buyerRate: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
                     </div>
                   ` : ''}
 
                   <div>
                     <label class="block text-slate-400 text-sm mb-2">Commission minimum (€)</label>
-                    <input type="number" value="${state.commissionSettings.minCommission}" oninput="setState({commissionSettings: {...state.commissionSettings, minCommission: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
+                    <input type="number" value="${state.commissionSettings.minCommission}" onchange="setState({commissionSettings: {...state.commissionSettings, minCommission: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
                   </div>
 
                   <div>
                     <label class="block text-slate-400 text-sm mb-2">Commission maximum (€)</label>
-                    <input type="number" value="${state.commissionSettings.maxCommission}" oninput="setState({commissionSettings: {...state.commissionSettings, maxCommission: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
+                    <input type="number" value="${state.commissionSettings.maxCommission}" onchange="setState({commissionSettings: {...state.commissionSettings, maxCommission: parseFloat(event.target.value)}})" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-xl text-white" />
                   </div>
 
                   <label class="flex items-center gap-2 cursor-pointer">
@@ -8103,6 +8210,80 @@ Le Syndic</textarea>
             </div>
           </div>
 
+          <!-- Personnalisation de l'interface -->
+          <div class="glass rounded-2xl p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              🎨 Personnalisation de l'interface
+            </h3>
+            
+            <div class="space-y-6">
+              <!-- Thème de couleur -->
+              <div>
+                <label class="block text-white font-semibold mb-4">Couleur du fond animé</label>
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                  ${[
+                    {
+                      id: 'purple-pink',
+                      name: 'Violet Rosé',
+                      gradient: 'linear-gradient(135deg, #7c3aed 0%, #c026d3 100%)',
+                      icon: '🟣'
+                    },
+                    {
+                      id: 'cyan-blue',
+                      name: 'Cyan Bleuté',
+                      gradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
+                      icon: '🔵'
+                    },
+                    {
+                      id: 'blue-purple',
+                      name: 'Bleu Lavande',
+                      gradient: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
+                      icon: '💙'
+                    },
+                    {
+                      id: 'peach-pink',
+                      name: 'Pêche Rosé',
+                      gradient: 'linear-gradient(135deg, #fb923c 0%, #f472b6 100%)',
+                      icon: '🍑'
+                    },
+                    {
+                      id: 'lavender-rose',
+                      name: 'Lavande Rose',
+                      gradient: 'linear-gradient(135deg, #f59e0b 0%, #ec4899 100%)',
+                      icon: '🌸'
+                    },
+                    {
+                      id: 'purple-ocean',
+                      name: 'Océan Violet',
+                      gradient: 'linear-gradient(135deg, #22d3ee 0%, #a78bfa 100%)',
+                      icon: '🌊'
+                    }
+                  ].map(theme => `
+                    <div 
+                      onclick="setBackgroundTheme('${theme.id}')"
+                      class="relative cursor-pointer group"
+                    >
+                      <div class="aspect-square rounded-xl overflow-hidden border-3 ${state.customization?.backgroundTheme === theme.id ? 'border-amber-400 shadow-lg shadow-amber-400/50 ring-2 ring-amber-400/30' : 'border-slate-600 hover:border-slate-400 hover:scale-105'} transition-all">
+                        <div style="background: ${theme.gradient}" class="w-full h-full"></div>
+                      </div>
+                      <div class="mt-1.5 text-center">
+                        <div class="text-white font-semibold text-xs flex items-center justify-center gap-0.5">
+                          <span class="text-sm">${theme.icon}</span>
+                        </div>
+                        ${state.customization?.backgroundTheme === theme.id ? `
+                          <div class="text-amber-400 text-xs font-bold mt-0.5">✓</div>
+                        ` : ''}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+                <p class="text-slate-400 text-xs mt-3 flex items-center gap-2">
+                  ✨ La couleur du fond animé change en temps réel sur toutes les pages
+                </p>
+              </div>
+            </div>
+          </div>
+
           <!-- Configuration Email Professionnelle -->
           <div class="glass rounded-2xl p-6">
             <div class="flex items-center justify-between mb-6">
@@ -8981,67 +9162,33 @@ Le Syndic</textarea>
             </div>
           </div>
 
-          <!-- Objectifs mensuels -->
-          <div class="glass rounded-2xl p-6">
-            <h3 class="text-xl font-bold text-white mb-6">Objectifs mensuels</h3>
-            <div class="grid md:grid-cols-3 gap-6">
-              <div>
-                <div class="text-slate-400 text-sm mb-2">Chiffre d'affaires</div>
-                <div class="flex items-baseline gap-2 mb-3">
-                  <div class="text-3xl font-bold text-white">${(advStats.monthlyRevenue / 1000).toFixed(0)}k</div>
-                  <div class="text-slate-400">/ 1000k €</div>
-                </div>
-                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                  <div 
-                    class="h-full bg-gradient-to-r from-green-500 to-green-400"
-                    style="width: ${(advStats.monthlyRevenue / 1000000) * 100}%"
-                  ></div>
-                </div>
-                <div class="text-xs text-slate-400 mt-2">${((advStats.monthlyRevenue / 1000000) * 100).toFixed(0)}% atteint</div>
-              </div>
-
-              <div>
-                <div class="text-slate-400 text-sm mb-2">Nouveaux clients</div>
-                <div class="flex items-baseline gap-2 mb-3">
-                  <div class="text-3xl font-bold text-white">${stats.totalClients}</div>
-                  <div class="text-slate-400">/ 15</div>
-                </div>
-                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                  <div 
-                    class="h-full bg-gradient-to-r from-blue-500 to-blue-400"
-                    style="width: ${(stats.totalClients / 15) * 100}%"
-                  ></div>
-                </div>
-                <div class="text-xs text-slate-400 mt-2">${((stats.totalClients / 15) * 100).toFixed(0)}% atteint</div>
-              </div>
-
-              <div>
-                <div class="text-slate-400 text-sm mb-2">Ventes conclues</div>
-                <div class="flex items-baseline gap-2 mb-3">
-                  <div class="text-3xl font-bold text-white">${stats.soldProperties}</div>
-                  <div class="text-slate-400">/ 5</div>
-                </div>
-                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                  <div 
-                    class="h-full bg-gradient-to-r from-purple-500 to-purple-400"
-                    style="width: ${(stats.soldProperties / 5) * 100}%"
-                  ></div>
-                </div>
-                <div class="text-xs text-slate-400 mt-2">${((stats.soldProperties / 5) * 100).toFixed(0)}% atteint</div>
-              </div>
-            </div>
-          </div>
         </div>
       `;
     }
 
     function renderVisits() {
+      const currentYear = 2026;
+      const months = [
+        'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+      ];
+      
+      // Grouper les visites par mois
+      const visitsByMonth = {};
+      months.forEach((month, index) => {
+        visitsByMonth[index] = state.visits.filter(v => {
+          const visitMonth = parseInt(v.date.split('/')[1]) - 1;
+          return visitMonth === index;
+        });
+      });
+      
       return `
         <div class="space-y-6">
+          <!-- Header -->
           <div class="flex justify-between items-center">
             <div>
-              <h3 class="text-2xl font-bold text-white">Calendrier des visites</h3>
-              <p class="text-slate-400 mt-1">${state.visits.length} visites programmées</p>
+              <h3 class="text-2xl font-bold text-white">📅 Calendrier Annuel ${currentYear}</h3>
+              <p class="text-slate-400 mt-1">${state.visits.length} visites programmées cette année</p>
             </div>
             <button
               onclick="setState({showAddVisit: true})"
@@ -9052,77 +9199,100 @@ Le Syndic</textarea>
             </button>
           </div>
 
-          <div class="grid lg:grid-cols-2 gap-6">
-            ${state.visits.map(visit => {
-              const property = state.properties.find(p => p.id === visit.propertyId);
-              const client = state.clients.find(c => c.id === visit.clientId);
-              const statusColors = {
-                'Terminée': 'bg-green-500/20 text-green-400',
-                'Programmée': 'bg-blue-500/20 text-blue-400',
-                'Confirmée': 'bg-purple-500/20 text-purple-400'
-              };
+          <!-- Calendar Grid - 12 months -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            ${months.map((month, index) => {
+              const monthVisits = visitsByMonth[index] || [];
+              const hasVisits = monthVisits.length > 0;
+              
               return `
-                <div class="glass rounded-2xl p-6 hover:shadow-xl transition-all">
-                  <div class="flex justify-between items-start mb-4">
-                    <div class="flex items-start gap-4">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white text-2xl flex-shrink-0">
-                        ${property?.image}
-                      </div>
-                      <div>
-                        <h4 class="text-white font-bold text-lg mb-1">${property?.title}</h4>
-                        <div class="flex items-center gap-2 text-slate-400 text-sm mb-2">
-                          ${icons.mapPin}
-                          ${property?.location}
-                        </div>
-                        <div class="flex items-center gap-2 text-amber-400 font-semibold">
-                          ${property?.price.toLocaleString()} <span class="text-lg">€</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="px-3 py-1 rounded-full text-xs font-semibold ${statusColors[visit.status]}">
-                      ${visit.status}
-                    </div>
+                <div class="glass rounded-xl p-4 ${hasVisits ? 'border-2 border-purple-500/30' : 'border border-slate-700'} hover:border-purple-500/50 transition-all">
+                  <!-- Month Header -->
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-white font-bold">${month}</h4>
+                    ${hasVisits ? `
+                      <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-bold">
+                        ${monthVisits.length}
+                      </span>
+                    ` : `
+                      <span class="text-slate-500 text-xs">0</span>
+                    `}
                   </div>
-
-                  <div class="bg-slate-800/50 rounded-xl p-4 mb-4">
-                    <div class="grid grid-cols-2 gap-4">
-                      <div>
-                        <div class="text-slate-400 text-xs mb-1">Client</div>
-                        <div class="text-white font-semibold">${client?.name}</div>
-                        <div class="text-slate-400 text-sm">${client?.phone}</div>
+                  
+                  <!-- Visits List -->
+                  <div class="space-y-2">
+                    ${monthVisits.length === 0 ? `
+                      <div class="text-center py-4 text-slate-500 text-sm">
+                        Aucune visite
                       </div>
-                      <div>
-                        <div class="text-slate-400 text-xs mb-1">Date & Heure</div>
-                        <div class="text-white font-semibold">${visit.date}</div>
-                        <div class="text-slate-400 text-sm">${visit.time}</div>
+                    ` : monthVisits.slice(0, 3).map(visit => {
+                      const property = state.properties.find(p => p.id === visit.propertyId);
+                      const client = state.clients.find(c => c.id === visit.clientId);
+                      const statusColors = {
+                        'Terminée': 'bg-green-500/20 text-green-400 border-green-500/30',
+                        'Programmée': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+                        'Confirmée': 'bg-purple-500/20 text-purple-400 border-purple-500/30'
+                      };
+                      
+                      return `
+                        <div class="p-2 bg-slate-800/50 rounded-lg border ${statusColors[visit.status]} hover:scale-105 transition-all cursor-pointer">
+                          <div class="flex items-center gap-2 mb-1">
+                            <span class="text-lg">${property?.image}</span>
+                            <div class="flex-1 min-w-0">
+                              <div class="text-white text-xs font-semibold truncate">${property?.title}</div>
+                              <div class="text-slate-400 text-xs truncate">${client?.name}</div>
+                            </div>
+                          </div>
+                          <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-400">${visit.date}</span>
+                            <span class="text-purple-400 font-semibold">${visit.time}</span>
+                          </div>
+                        </div>
+                      `;
+                    }).join('')}
+                    
+                    ${monthVisits.length > 3 ? `
+                      <div class="text-center">
+                        <button class="text-purple-400 text-xs font-semibold hover:text-purple-300">
+                          +${monthVisits.length - 3} autre${monthVisits.length - 3 > 1 ? 's' : ''}
+                        </button>
                       </div>
-                    </div>
-                  </div>
-
-                  ${visit.notes ? `
-                    <div class="bg-slate-800/30 rounded-lg p-3 mb-4">
-                      <div class="text-slate-400 text-xs mb-1">Notes</div>
-                      <div class="text-slate-300 text-sm">${visit.notes}</div>
-                    </div>
-                  ` : ''}
-
-                  <div class="flex items-center justify-between text-sm text-slate-400 pt-4 border-t border-slate-700">
-                    <div class="flex items-center gap-2">
-                      ${icons.user}
-                      ${visit.agent}
-                    </div>
-                    <div class="flex gap-2">
-                      <button class="p-2 hover:bg-slate-700 rounded-lg transition-colors text-slate-400 hover:text-white">
-                        ${icons.edit}
-                      </button>
-                      <button class="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-slate-400 hover:text-red-400">
-                        ${icons.trash}
-                      </button>
-                    </div>
+                    ` : ''}
                   </div>
                 </div>
               `;
             }).join('')}
+          </div>
+          
+          <!-- Légende -->
+          <div class="glass rounded-xl p-4">
+            <h4 class="text-white font-bold mb-3">📊 Répartition annuelle</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <span class="text-slate-300 text-sm">
+                  Terminées: ${state.visits.filter(v => v.status === 'Terminée').length}
+                </span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                <span class="text-slate-300 text-sm">
+                  Programmées: ${state.visits.filter(v => v.status === 'Programmée').length}
+                </span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                <span class="text-slate-300 text-sm">
+                  Confirmées: ${state.visits.filter(v => v.status === 'Confirmée').length}
+                </span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                <span class="text-slate-300 text-sm">
+                  Total: ${state.visits.length}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -10046,6 +10216,19 @@ Le Syndic</textarea>
               </svg>
             </div>
             
+            <!-- Bouton Connexion en haut à droite -->
+            <div class="absolute top-8 right-8 z-20 animate-slideInRight">
+              <button 
+                onclick="setState({showLoginChoice: true})"
+                class="login-btn-gold px-8 py-3 rounded-2xl font-bold text-lg transition-all flex items-center gap-2"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Connexion
+              </button>
+            </div>
+            
             <!-- Content -->
             <div class="text-center relative z-10 px-4">
               <!-- Company Name - HUGE -->
@@ -10148,6 +10331,159 @@ Le Syndic</textarea>
                 Entrer
               </button>
             </div>
+            
+            <!-- Modal de choix de connexion -->
+            ${state.showLoginChoice ? `
+              <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn" onclick="if(event.target === event.currentTarget) setState({showLoginChoice: false, loginEmail: ''})">
+                <div class="glass rounded-3xl p-8 max-w-4xl w-full mx-4 animate-slideInUp" onclick="event.stopPropagation()">
+                  
+                  ${!state.loginEmail ? `
+                    <!-- Étape 1: Demander l'email -->
+                    <div class="text-center mb-8">
+                      <h2 class="text-4xl font-bold text-white mb-3" style="
+                        background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                      ">
+                        Connexion à Realtix Pro
+                      </h2>
+                      <p class="text-slate-300 text-lg mb-8">Entrez votre adresse email pour continuer</p>
+                      
+                      <div class="max-w-md mx-auto">
+                        <input
+                          type="email"
+                          id="loginEmailInput"
+                          placeholder="votre.email@exemple.com"
+                          class="w-full px-6 py-4 bg-slate-800/50 border-2 border-slate-700 hover:border-amber-500/50 focus:border-amber-500 rounded-xl text-white text-lg placeholder-slate-500 focus:outline-none transition-all"
+                          onkeypress="if(event.key === 'Enter') { const email = event.target.value; if(email) setState({loginEmail: email.toLowerCase()}); }"
+                        />
+                        <button
+                          onclick="const email = document.getElementById('loginEmailInput').value; if(email) setState({loginEmail: email.toLowerCase()});"
+                          class="w-full mt-4 px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold text-lg rounded-xl transition-all hover:scale-105 shadow-lg hover:shadow-amber-500/50"
+                        >
+                          Continuer →
+                        </button>
+                      </div>
+                    </div>
+                  ` : `
+                    <!-- Étape 2: Choix du rôle (selon les autorisations) -->
+                    <div class="text-center mb-8">
+                      <h2 class="text-4xl font-bold text-white mb-3" style="
+                        background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                      ">
+                        Choisissez votre rôle
+                      </h2>
+                      <p class="text-slate-300 text-lg">
+                        <span class="text-amber-400">${state.loginEmail}</span>
+                      </p>
+                    </div>
+                    
+                    <!-- Choix des rôles -->
+                    <div class="grid ${isInvitedAgent(state.loginEmail) ? 'md:grid-cols-1 max-w-md mx-auto' : 'md:grid-cols-2'} gap-6 mb-6">
+                      ${!isInvitedAgent(state.loginEmail) ? `
+                        <!-- Gérant (seulement si pas un agent invité) -->
+                        <button 
+                          onclick="setState({currentUser: {name: 'Philippe Rousseau', role: 'manager', email: '${state.loginEmail}'}, currentPage: 'dashboard', showPublicLanding: false, isLoading: false, showLoginChoice: false, loginEmail: ''})"
+                          class="group relative overflow-hidden bg-gradient-to-br from-purple-500/20 to-purple-600/20 hover:from-purple-500/30 hover:to-purple-600/30 border-2 border-purple-500/50 hover:border-purple-400 rounded-2xl p-8 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/30"
+                        >
+                          <div class="relative z-10">
+                            <div class="w-24 h-24 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-5xl shadow-lg">
+                              👔
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">Gérant</h3>
+                            <p class="text-slate-300 mb-4">Accès complet à toutes les fonctionnalités</p>
+                            <div class="space-y-2 text-sm text-slate-400">
+                              <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Gestion complète</span>
+                              </div>
+                              <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Tous les modules</span>
+                              </div>
+                              <div class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Gestion d'équipe</span>
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+                      ` : ''}
+                      
+                      <!-- Agent (toujours visible) -->
+                      <button 
+                        onclick="setState({currentUser: {name: '${getMemberByEmail(state.loginEmail)?.name || 'Agent Commercial'}', role: 'agent', email: '${state.loginEmail}'}, currentPage: 'dashboard', showPublicLanding: false, isLoading: false, showLoginChoice: false, loginEmail: ''})"
+                        class="group relative overflow-hidden bg-gradient-to-br from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 border-2 border-blue-500/50 hover:border-blue-400 rounded-2xl p-8 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/30"
+                      >
+                        <div class="relative z-10">
+                          <div class="w-24 h-24 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-5xl shadow-lg">
+                            🏢
+                          </div>
+                          <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Agent</h3>
+                          <p class="text-slate-300 mb-4">Accès aux fonctionnalités essentielles</p>
+                          ${isInvitedAgent(state.loginEmail) ? `
+                            <div class="mb-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg">
+                              <p class="text-green-400 text-sm font-semibold">✓ Membre de l'équipe</p>
+                            </div>
+                          ` : ''}
+                          <div class="space-y-2 text-sm text-slate-400">
+                            <div class="flex items-center gap-2">
+                              <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                              </svg>
+                              <span>Gestion des biens</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                              </svg>
+                              <span>Gestion des visites</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                              </svg>
+                              <span>Suivi des clients</span>
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                    
+                    <!-- Bouton retour -->
+                    <div class="text-center">
+                      <button 
+                        onclick="setState({loginEmail: ''})"
+                        class="text-slate-400 hover:text-white transition-colors underline"
+                      >
+                        ← Changer d'email
+                      </button>
+                    </div>
+                  `}
+                  
+                  ${!state.loginEmail ? `
+                    <div class="text-center mt-6">
+                      <button 
+                        onclick="setState({showLoginChoice: false})"
+                        class="text-slate-400 hover:text-white transition-colors underline"
+                      >
+                        Retour à l'accueil
+                      </button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            ` : ''}
           </div>
         `;
         return;
@@ -10477,13 +10813,15 @@ Le Syndic</textarea>
                   <li><strong>Entreprise</strong> : 149€/mois (1490€/an)</li>
                 </ul>
 
-                <h3 class="text-xl font-semibold text-white mb-2 mt-4">4.2 Essai gratuit</h3>
-                <p>Un essai gratuit de 7 jours avec accès complet aux fonctionnalités Entreprise est proposé, sans obligation de carte bancaire.</p>
+                ${!state.subscription.hasUsedFreeTrial ? `
+                  <h3 class="text-xl font-semibold text-white mb-2 mt-4">4.2 Essai gratuit</h3>
+                  <p>Un essai gratuit de 7 jours avec accès complet aux fonctionnalités Entreprise est proposé, sans obligation de carte bancaire.</p>
+                ` : ''}
 
-                <h3 class="text-xl font-semibold text-white mb-2 mt-4">4.3 Paiement</h3>
+                <h3 class="text-xl font-semibold text-white mb-2 mt-4">${!state.subscription.hasUsedFreeTrial ? '4.3' : '4.2'} Paiement</h3>
                 <p>Les paiements sont effectués par carte bancaire via notre prestataire de paiement sécurisé Stripe. Les abonnements sont renouvelés automatiquement sauf annulation.</p>
 
-                <h3 class="text-xl font-semibold text-white mb-2 mt-4">4.4 Résiliation</h3>
+                <h3 class="text-xl font-semibold text-white mb-2 mt-4">${!state.subscription.hasUsedFreeTrial ? '4.4' : '4.3'} Résiliation</h3>
                 <p>Vous pouvez résilier votre abonnement à tout moment depuis votre espace "Mon abonnement". La résiliation prend effet à la fin de la période en cours.</p>
               </section>
 
@@ -11666,6 +12004,16 @@ Le Syndic</textarea>
 
     function informerCoproprieteaires() {
       showToast('📢 Mise à jour envoyée à 45 copropriétaires avec succès !');
+    }
+
+    function setBackgroundTheme(themeId) {
+      setState({
+        customization: {
+          ...state.customization,
+          backgroundTheme: themeId
+        }
+      });
+      showToast('🎨 Thème de couleur appliqué !');
     }
 
     // Initial render with loading animation
