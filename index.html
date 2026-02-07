@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Realtix Pro - Plateforme de Gestion Immobilière</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://js.stripe.com/v3/"></script>
+  <!-- <script src="https://js.stripe.com/v3/"></script> -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -1160,6 +1160,13 @@
       selectedSignalementId: null,
       showModeleMessages: false,
       showRappelsTravaux: false,
+      showDemandeDevis: false,
+      showAssignArtisan: false,
+      showSendMessage: false,
+      showPlanifierIntervention: false,
+      showInformerCopro: false,
+      selectedCoproCommunication: null,
+      communicationRecipients: 'all',
       newSignalement: {
         coproId: null,
         type: '',
@@ -1836,6 +1843,7 @@
             name: 'Résidence Les Oliviers',
             address: '15 Avenue de Provence, 13100 Aix-en-Provence',
             lots: 45,
+            residents: 45,
             budget: 125000,
             nextAG: '2026-03-15',
             status: 'active'
@@ -1845,6 +1853,7 @@
             name: 'Le Clos des Vignes',
             address: '8 Rue du Château, 84000 Avignon',
             lots: 28,
+            residents: 28,
             budget: 78000,
             nextAG: '2026-04-20',
             status: 'active'
@@ -1867,8 +1876,9 @@
           { id: 3, coproId: 2, name: 'Règlement Copropriété', type: 'reglement', date: '2024-06-20', size: '1.2 MB' }
         ],
         messages: [
-          { id: 1, coproId: 1, subject: 'Travaux ascenseur planifiés', content: 'Chers copropriétaires,\\n\\nNous vous informons que des travaux de maintenance sur l\'ascenseur sont prévus du 10 au 12 février.\\n\\nMerci de votre compréhension.', date: '2026-02-02', recipients: 45, readBy: 38, author: 'Marie Dubois' },
-          { id: 2, coproId: 2, subject: 'Fermeture parking temporaire', content: 'Bonjour,\\n\\nLe parking sera fermé le 15 février pour travaux de réfection. Merci de prévoir un stationnement alternatif.', date: '2026-01-30', recipients: 28, readBy: 25, author: 'Marie Dubois' }
+          { id: 1, coproId: 1, subject: 'Travaux ascenseur planifiés', content: 'Chers copropriétaires,\\n\\nNous vous informons que des travaux de maintenance sur l\'ascenseur sont prévus du 10 au 12 février.\\n\\nMerci de votre compréhension.', date: '2026-02-02', recipients: 45, readBy: 38, author: 'Marie Dubois', hasAttachments: true },
+          { id: 2, coproId: 2, subject: 'Fermeture parking temporaire', content: 'Bonjour,\\n\\nLe parking sera fermé le 15 février pour travaux de réfection. Merci de prévoir un stationnement alternatif.', date: '2026-01-30', recipients: 28, readBy: 25, author: 'Marie Dubois', hasAttachments: false },
+          { id: 3, coproId: 1, subject: 'Coupure d\'eau programmée', content: 'Une intervention sur le réseau d\'eau nécessite une coupure le 8 février de 9h à 12h. Merci de votre compréhension.', date: '2026-02-05', recipients: 45, readBy: 18, author: 'Marie Dubois', hasAttachments: true }
         ],
         residents: [
           { id: 1, coproId: 1, name: 'Jean Dupont', lot: 'A12', email: 'jean.dupont@email.com', phone: '06 12 34 56 78', role: 'coproprietaire' },
@@ -2034,10 +2044,6 @@
       }
     }
 
-    function setState(updates) {
-      state = { ...state, ...updates };
-      render();
-    }
 
     function login(role) {
       const user = role === 'manager' 
@@ -2203,118 +2209,28 @@
 
     // Helper: Render animated neon background
     function renderNeonBackground() {
-      // Color schemes
-      const colorSchemes = {
-        amber: {
-          primary: 'rgba(251, 191, 36',
-          secondary: 'rgba(245, 158, 11',
-          accent: 'rgba(217, 119, 6',
-          name: 'Or/Ambre'
-        },
-        blue: {
-          primary: 'rgba(59, 130, 246',
-          secondary: 'rgba(37, 99, 235',
-          accent: 'rgba(29, 78, 216',
-          name: 'Bleu'
-        },
-        purple: {
-          primary: 'rgba(168, 85, 247',
-          secondary: 'rgba(147, 51, 234',
-          accent: 'rgba(126, 34, 206',
-          name: 'Violet'
-        },
-        green: {
-          primary: 'rgba(34, 197, 94',
-          secondary: 'rgba(22, 163, 74',
-          accent: 'rgba(21, 128, 61',
-          name: 'Vert'
-        },
-        cyan: {
-          primary: 'rgba(34, 211, 238',
-          secondary: 'rgba(6, 182, 212',
-          accent: 'rgba(8, 145, 178',
-          name: 'Cyan'
-        },
-        rose: {
-          primary: 'rgba(244, 63, 94',
-          secondary: 'rgba(225, 29, 72',
-          accent: 'rgba(190, 18, 60',
-          name: 'Rose'
-        }
-      };
-
-      const scheme = colorSchemes[state.customization.backgroundScheme] || colorSchemes.amber;
-
       return `
-        <!-- Animated Organic Neon Background -->
-        <div class="animated-bg">
-          <!-- Ambient glows -->
-          <div class="ambient-glow glow-1" style="background: radial-gradient(circle, ${scheme.primary}, 0.6) 0%, transparent 70%);"></div>
-          <div class="ambient-glow glow-2" style="background: radial-gradient(circle, ${scheme.secondary}, 0.5) 0%, transparent 70%);"></div>
-          <div class="ambient-glow glow-3" style="background: radial-gradient(circle, ${scheme.accent}, 0.4) 0%, transparent 70%);"></div>
-          
-          <!-- Organic neon waves -->
-          <div class="neon-wave wave-1">
-            <svg viewBox="0 0 2000 150" preserveAspectRatio="none">
-              <path d="M 0,75 Q 100,20 200,75 T 400,75 T 600,75 T 800,75 T 1000,75 T 1200,75 T 1400,75 T 1600,75 T 1800,75 T 2000,75" 
-                    fill="none" 
-                    stroke="${scheme.primary}, 0.9)" 
-                    stroke-width="3" 
-                    style="filter: drop-shadow(0 0 20px ${scheme.primary}, 0.8)) drop-shadow(0 0 40px ${scheme.primary}, 0.5))"/>
-            </svg>
-          </div>
-          
-          <div class="neon-wave wave-2">
-            <svg viewBox="0 0 2000 150" preserveAspectRatio="none">
-              <path d="M 0,75 Q 150,110 300,75 T 600,75 T 900,75 T 1200,75 T 1500,75 T 1800,75 T 2100,75" 
-                    fill="none" 
-                    stroke="${scheme.secondary}, 0.7)" 
-                    stroke-width="2.5" 
-                    style="filter: drop-shadow(0 0 15px ${scheme.secondary}, 0.7)) drop-shadow(0 0 30px ${scheme.secondary}, 0.4))"/>
-            </svg>
-          </div>
-          
-          <div class="neon-wave wave-3">
-            <svg viewBox="0 0 2000 150" preserveAspectRatio="none">
-              <path d="M 0,75 Q 120,35 240,75 T 480,75 T 720,75 T 960,75 T 1200,75 T 1440,75 T 1680,75 T 1920,75" 
-                    fill="none" 
-                    stroke="${scheme.primary}, 0.8)" 
-                    stroke-width="2" 
-                    style="filter: drop-shadow(0 0 12px ${scheme.primary}, 0.7)) drop-shadow(0 0 25px ${scheme.primary}, 0.4))"/>
-            </svg>
-          </div>
-          
-          <div class="neon-wave wave-4">
-            <svg viewBox="0 0 2000 150" preserveAspectRatio="none">
-              <path d="M 0,75 Q 180,100 360,75 T 720,75 T 1080,75 T 1440,75 T 1800,75" 
-                    fill="none" 
-                    stroke="${scheme.accent}, 0.6)" 
-                    stroke-width="2.5" 
-                    style="filter: drop-shadow(0 0 15px ${scheme.accent}, 0.6)) drop-shadow(0 0 30px ${scheme.accent}, 0.3))"/>
-            </svg>
-          </div>
-          
-          <div class="neon-wave wave-5">
-            <svg viewBox="0 0 2000 150" preserveAspectRatio="none">
-              <path d="M 0,75 Q 140,50 280,75 T 560,75 T 840,75 T 1120,75 T 1400,75 T 1680,75 T 1960,75" 
-                    fill="none" 
-                    stroke="${scheme.primary}, 0.65)" 
-                    stroke-width="2" 
-                    style="filter: drop-shadow(0 0 10px ${scheme.primary}, 0.6)) drop-shadow(0 0 20px ${scheme.primary}, 0.3))"/>
-            </svg>
-          </div>
-          
-          <!-- Sparkle particles -->
-          ${Array.from({length: 30}).map((_, i) => `
-            <div class="sparkle" 
-                 style="left: ${Math.random() * 100}%; 
-                        top: ${Math.random() * 100}%;
-                        background: ${scheme.primary}, 0.8);
-                        box-shadow: 0 0 10px ${scheme.primary}, 0.8), 0 0 20px ${scheme.primary}, 0.4);
-                        animation-delay: ${Math.random() * 5}s;
-                        animation-duration: ${4 + Math.random() * 4}s;">
-            </div>
-          `).join('')}
+        <!-- Animated Waves Background -->
+        <div class="wave-container">
+          <svg class="wave-svg" viewBox="0 0 2000 1000" preserveAspectRatio="none">
+            <!-- Wave 1 - Purple -->
+            <path class="wave-path-1" d="M 0 500 Q 250 300, 500 500 T 1000 500 T 1500 500 T 2000 500" />
+            <path class="wave-path-1" d="M 0 450 Q 300 250, 600 450 T 1200 450 T 1800 450 T 2400 450" />
+            
+            <!-- Wave 2 - Pink -->
+            <path class="wave-path-2" d="M 0 550 Q 200 700, 400 550 T 800 550 T 1200 550 T 1600 550 T 2000 550" />
+            <path class="wave-path-2" d="M 0 600 Q 350 750, 700 600 T 1400 600 T 2100 600" />
+            
+            <!-- Wave 3 - Deep Purple -->
+            <path class="wave-path-3" d="M 0 400 Q 280 200, 560 400 T 1120 400 T 1680 400 T 2240 400" />
+            
+            <!-- Wave 4 - Deep Pink -->
+            <path class="wave-path-4" d="M 0 650 Q 220 800, 440 650 T 880 650 T 1320 650 T 1760 650 T 2200 650" />
+            
+            <!-- Wave 5 - Light Purple -->
+            <path class="wave-path-5" d="M 0 350 Q 320 180, 640 350 T 1280 350 T 1920 350" />
+            <path class="wave-path-5" d="M 0 700 Q 240 850, 480 700 T 960 700 T 1440 700 T 1920 700" />
+          </svg>
         </div>
       `;
     }
@@ -2501,6 +2417,11 @@
           ${state.showSignalementDetail ? renderSignalementDetail() : ''}
           ${state.showModeleMessages ? renderModeleMessagesModal() : ''}
           ${state.showRappelsTravaux ? renderRappelsTravauxModal() : ''}
+          ${state.showDemandeDevis ? renderDemandeDevisModal() : ''}
+          ${state.showAssignArtisan ? renderAssignArtisanModal() : ''}
+          ${state.showSendMessage ? renderSendMessageModal() : ''}
+          ${state.showPlanifierIntervention ? renderPlanifierInterventionModal() : ''}
+          ${state.showInformerCopro ? renderInformerCoproModal() : ''}
         </div>
       `;
     }
@@ -2745,6 +2666,18 @@
                 </select>
               </div>
 
+              <!-- Appartement -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Appartement *</label>
+                <input
+                  type="text"
+                  oninput="setState({newSignalement: {...state.newSignalement, apartment: event.target.value}})"
+                  placeholder="Ex: Appt 12, Bât A - 3ème étage"
+                  value="${state.newSignalement.apartment || ''}"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-400"
+                />
+              </div>
+
               <!-- Type de signalement -->
               <div>
                 <label class="block text-slate-300 font-semibold mb-2">Type de signalement *</label>
@@ -2796,13 +2729,62 @@
                 >${state.newSignalement.description}</textarea>
               </div>
 
-              <!-- Photos -->
+              <!-- Artisan / Prestataire -->
               <div>
-                <label class="block text-slate-300 font-semibold mb-2">Photos (optionnel)</label>
+                <label class="block text-slate-300 font-semibold mb-2">Artisan / Prestataire</label>
+                <select 
+                  onchange="setState({newSignalement: {...state.newSignalement, artisan: event.target.value}})"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                >
+                  <option value="">Aucun artisan assigné</option>
+                  <option value="Plomberie Martin">🔧 Plomberie Martin</option>
+                  <option value="Électricité Dupont">⚡ Électricité Dupont</option>
+                  <option value="Serrurier Express">🔑 Serrurier Express</option>
+                  <option value="Vitrier Pro">🪟 Vitrier Pro</option>
+                  <option value="Chauffage Services">🔥 Chauffage Services</option>
+                  <option value="Autre">Autre prestataire</option>
+                </select>
+              </div>
+
+              <!-- Date intervention planifiée -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Date intervention prévue</label>
+                <input
+                  type="date"
+                  onchange="setState({newSignalement: {...state.newSignalement, interventionDate: event.target.value}})"
+                  value="${state.newSignalement.interventionDate || ''}"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+              </div>
+
+              <!-- Photos fuite -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Photos du problème</label>
                 <input type="file" multiple accept="image/*" class="hidden" id="signalement-photos" />
                 <label for="signalement-photos" class="block w-full px-4 py-3 bg-slate-800 border-2 border-dashed border-slate-600 rounded-xl text-center cursor-pointer hover:border-purple-400 transition-all">
-                  <span class="text-slate-400">📷 Ajouter des photos</span>
+                  <span class="text-slate-400">📷 Ajouter des photos de la fuite/problème</span>
                 </label>
+              </div>
+
+              <!-- Upload devis -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Devis (PDF)</label>
+                <input type="file" accept=".pdf" class="hidden" id="signalement-devis" />
+                <label for="signalement-devis" class="block w-full px-4 py-3 bg-slate-800 border-2 border-dashed border-slate-600 rounded-xl text-center cursor-pointer hover:border-amber-400 transition-all">
+                  <span class="text-slate-400">📄 Joindre un devis</span>
+                </label>
+              </div>
+
+              <!-- Commentaire syndic -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">💼 Commentaire interne syndic</label>
+                <textarea
+                  oninput="setState({newSignalement: {...state.newSignalement, syndicComment: event.target.value}})"
+                  placeholder="Notes privées du syndic (non visible par les copropriétaires)..."
+                  rows="3"
+                  class="w-full px-4 py-3 bg-slate-800/50 border border-amber-500/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+                >${state.newSignalement.syndicComment || ''}</textarea>
+                <p class="text-xs text-slate-500 mt-1">🔒 Note confidentielle - réservée au syndic</p>
               </div>
 
               <!-- Options avancées -->
@@ -2868,6 +2850,547 @@
         </div>
       `;
     }
+
+    // ===== MODAL DEMANDER DEVIS =====
+    function renderDemandeDevisModal() {
+      return `
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn" onclick="if(event.target === event.currentTarget) setState({showDemandeDevis: false})">
+          <div class="glass rounded-2xl p-8 max-w-2xl w-full animate-slideInUp max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-bold text-white">📄 Demander un Devis</h2>
+              <button onclick="setState({showDemandeDevis: false})" class="text-slate-400 hover:text-white transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="space-y-5">
+              <!-- Signalement concerné -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Signalement concerné</label>
+                <div class="p-4 bg-slate-800/50 border border-purple-500/30 rounded-xl">
+                  <p class="text-white font-semibold">Fuite d'eau - Résidence Les Oliviers</p>
+                  <p class="text-slate-400 text-sm">Appartement 12B</p>
+                </div>
+              </div>
+
+              <!-- Sélection artisans -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Artisans à contacter *</label>
+                <div class="space-y-2">
+                  ${[
+                    {name: 'Plomberie Martin', specialty: 'Plomberie', rating: '4.8/5', icon: '🔧'},
+                    {name: 'Électricité Dupont', specialty: 'Électricité', rating: '4.9/5', icon: '⚡'},
+                    {name: 'Chauffage Services', specialty: 'Chauffage', rating: '4.7/5', icon: '🔥'}
+                  ].map(artisan => `
+                    <label class="flex items-center gap-4 p-4 bg-slate-700 rounded-xl cursor-pointer hover:bg-slate-600 transition-all">
+                      <input type="checkbox" class="w-5 h-5" />
+                      <div class="flex-1">
+                        <div class="flex items-center gap-2">
+                          <span class="text-xl">${artisan.icon}</span>
+                          <span class="text-white font-semibold">${artisan.name}</span>
+                        </div>
+                        <div class="flex items-center gap-3 mt-1">
+                          <span class="text-slate-400 text-sm">${artisan.specialty}</span>
+                          <span class="text-amber-400 text-sm">⭐ ${artisan.rating}</span>
+                        </div>
+                      </div>
+                    </label>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Description des travaux -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Description des travaux *</label>
+                <textarea
+                  placeholder="Décrivez les travaux à effectuer pour le devis..."
+                  rows="4"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+                ></textarea>
+              </div>
+
+              <!-- Délai souhaité -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Délai de réponse souhaité</label>
+                <select class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                  <option>24 heures</option>
+                  <option>48 heures</option>
+                  <option>72 heures</option>
+                  <option>1 semaine</option>
+                </select>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-4 pt-4">
+                <button
+                  onclick="sendDevisRequest(); setState({showDemandeDevis: false})"
+                  class="flex-1 px-6 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-xl font-bold transition-all shadow-lg"
+                >
+                  📄 Envoyer les demandes de devis
+                </button>
+                <button
+                  onclick="setState({showDemandeDevis: false})"
+                  class="px-6 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-semibold transition-all"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ===== MODAL ASSIGNER ARTISAN =====
+    function renderAssignArtisanModal() {
+      return `
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn" onclick="if(event.target === event.currentTarget) setState({showAssignArtisan: false})">
+          <div class="glass rounded-2xl p-8 max-w-2xl w-full animate-slideInUp max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-bold text-white">🔧 Assigner un Artisan</h2>
+              <button onclick="setState({showAssignArtisan: false})" class="text-slate-400 hover:text-white transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="space-y-5">
+              <!-- Signalement concerné -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Signalement concerné</label>
+                <div class="p-4 bg-slate-800/50 border border-blue-500/30 rounded-xl">
+                  <p class="text-white font-semibold">Fuite d'eau - Résidence Les Oliviers</p>
+                  <p class="text-slate-400 text-sm">Appartement 12B - Priorité HAUTE</p>
+                </div>
+              </div>
+
+              <!-- Sélection artisan -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Choisir un artisan *</label>
+                <div class="space-y-3">
+                  ${[
+                    {name: 'Plomberie Martin', specialty: 'Plomberie', phone: '06 12 34 56 78', rating: '4.8/5', icon: '🔧', available: 'Disponible demain'},
+                    {name: 'Électricité Dupont', specialty: 'Électricité', phone: '06 98 76 54 32', rating: '4.9/5', icon: '⚡', available: 'Disponible aujourd\'hui'},
+                    {name: 'Chauffage Services', specialty: 'Chauffage', phone: '06 45 67 89 01', rating: '4.7/5', icon: '🔥', available: 'Disponible la semaine prochaine'}
+                  ].map((artisan, idx) => `
+                    <label class="flex items-start gap-4 p-5 bg-slate-700 rounded-xl cursor-pointer hover:bg-slate-600 transition-all border-2 border-transparent hover:border-blue-400">
+                      <input type="radio" name="artisan" value="${idx}" class="w-5 h-5 mt-1" />
+                      <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                          <span class="text-2xl">${artisan.icon}</span>
+                          <span class="text-white font-bold text-lg">${artisan.name}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                          <div class="text-slate-400">${artisan.specialty}</div>
+                          <div class="text-amber-400">⭐ ${artisan.rating}</div>
+                          <div class="text-slate-400">📞 ${artisan.phone}</div>
+                          <div class="text-green-400">✓ ${artisan.available}</div>
+                        </div>
+                      </div>
+                    </label>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Date d'intervention -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Date d'intervention souhaitée</label>
+                <input
+                  type="date"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+
+              <!-- Notes -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Notes pour l'artisan</label>
+                <textarea
+                  placeholder="Instructions spéciales, accès, contact..."
+                  rows="3"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+                ></textarea>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-4 pt-4">
+                <button
+                  onclick="assignArtisan(); setState({showAssignArtisan: false})"
+                  class="flex-1 px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl font-bold transition-all shadow-lg"
+                >
+                  🔧 Assigner l'artisan
+                </button>
+                <button
+                  onclick="setState({showAssignArtisan: false})"
+                  class="px-6 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-semibold transition-all"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ===== MODAL ENVOYER MESSAGE (Depuis détail signalement) =====
+    function renderSendMessageModal() {
+      return `
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn" onclick="if(event.target === event.currentTarget) setState({showSendMessage: false})">
+          <div class="glass rounded-2xl p-8 max-w-2xl w-full animate-slideInUp max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-bold text-white">💬 Envoyer un Message</h2>
+              <button onclick="setState({showSendMessage: false})" class="text-slate-400 hover:text-white transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="space-y-5">
+              <!-- Concernant -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Concernant</label>
+                <div class="p-4 bg-slate-800/50 border border-purple-500/30 rounded-xl">
+                  <p class="text-white font-semibold">Fuite d'eau - Résidence Les Oliviers</p>
+                  <p class="text-slate-400 text-sm">Appartement 12B</p>
+                </div>
+              </div>
+
+              <!-- Destinataires -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Destinataires *</label>
+                <div class="grid grid-cols-3 gap-3">
+                  <button class="p-4 rounded-xl bg-purple-500 text-white border-2 border-purple-400 hover:bg-purple-600 transition-all">
+                    <div class="text-2xl mb-2">👥</div>
+                    <div class="font-medium text-sm">Tous les copropriétaires</div>
+                  </button>
+                  <button class="p-4 rounded-xl bg-slate-700 text-white border-2 border-transparent hover:bg-slate-600 transition-all">
+                    <div class="text-2xl mb-2">🏛️</div>
+                    <div class="font-medium text-sm">Conseil syndical</div>
+                  </button>
+                  <button class="p-4 rounded-xl bg-slate-700 text-white border-2 border-transparent hover:bg-slate-600 transition-all">
+                    <div class="text-2xl mb-2">🏠</div>
+                    <div class="font-medium text-sm">Résident concerné</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Objet -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Objet *</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Point sur l'intervention de plomberie"
+                  value="Intervention prévue pour fuite d'eau"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+              </div>
+
+              <!-- Message -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Message *</label>
+                <textarea
+                  placeholder="Rédigez votre message..."
+                  rows="6"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+                >Bonjour,
+
+Suite au signalement de fuite d'eau dans l'appartement 12B, une intervention est programmée demain à 14h00 avec Plomberie Martin.
+
+L'accès aux parties communes pourrait être nécessaire.
+
+Cordialement,
+Le Syndic</textarea>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-4 pt-4">
+                <button
+                  onclick="sendMessage(); setState({showSendMessage: false})"
+                  class="flex-1 px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg"
+                >
+                  💬 Envoyer le message
+                </button>
+                <button
+                  onclick="setState({showSendMessage: false})"
+                  class="px-6 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-semibold transition-all"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ===== MODAL PLANIFIER INTERVENTION =====
+    function renderPlanifierInterventionModal() {
+      return `
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn" onclick="if(event.target === event.currentTarget) setState({showPlanifierIntervention: false})">
+          <div class="glass rounded-2xl p-8 max-w-2xl w-full animate-slideInUp max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-bold text-white">📅 Planifier une Intervention</h2>
+              <button onclick="setState({showPlanifierIntervention: false})" class="text-slate-400 hover:text-white transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="space-y-5">
+              <!-- Signalement concerné -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Signalement concerné</label>
+                <div class="p-4 bg-slate-800/50 border border-green-500/30 rounded-xl">
+                  <p class="text-white font-semibold">Fuite d'eau - Résidence Les Oliviers</p>
+                  <p class="text-slate-400 text-sm">Appartement 12B</p>
+                </div>
+              </div>
+
+              <!-- Artisan -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Artisan assigné</label>
+                <div class="p-4 bg-slate-700 rounded-xl flex items-center gap-3">
+                  <span class="text-2xl">🔧</span>
+                  <div class="flex-1">
+                    <p class="text-white font-semibold">Plomberie Martin</p>
+                    <p class="text-slate-400 text-sm">📞 06 12 34 56 78</p>
+                  </div>
+                  <button class="text-blue-400 hover:text-blue-300 text-sm font-semibold">Changer</button>
+                </div>
+              </div>
+
+              <!-- Date et heure -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-slate-300 font-semibold mb-2">Date *</label>
+                  <input
+                    type="date"
+                    value="2026-02-07"
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-400"
+                  />
+                </div>
+                <div>
+                  <label class="block text-slate-300 font-semibold mb-2">Heure *</label>
+                  <input
+                    type="time"
+                    value="14:00"
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-400"
+                  />
+                </div>
+              </div>
+
+              <!-- Durée estimée -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Durée estimée</label>
+                <select class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+                  <option>30 minutes</option>
+                  <option selected>1 heure</option>
+                  <option>2 heures</option>
+                  <option>3 heures</option>
+                  <option>Demi-journée</option>
+                  <option>Journée complète</option>
+                </select>
+              </div>
+
+              <!-- Coût estimé -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Coût estimé</label>
+                <input
+                  type="text"
+                  placeholder="Ex: 450"
+                  value="450"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-400"
+                />
+              </div>
+
+              <!-- Notes intervention -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Notes intervention</label>
+                <textarea
+                  placeholder="Détails de l'intervention, matériel nécessaire..."
+                  rows="3"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
+                >Réparation fuite au niveau du raccordement. Prévoir accès compteur d'eau.</textarea>
+              </div>
+
+              <!-- Notification -->
+              <div class="flex items-center gap-3 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                <input type="checkbox" checked class="w-5 h-5" />
+                <label class="text-white font-semibold">Notifier le résident et la copropriété</label>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-4 pt-4">
+                <button
+                  onclick="planifierIntervention(); setState({showPlanifierIntervention: false})"
+                  class="flex-1 px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-bold transition-all shadow-lg"
+                >
+                  📅 Confirmer l'intervention
+                </button>
+                <button
+                  onclick="setState({showPlanifierIntervention: false})"
+                  class="px-6 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-semibold transition-all"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ===== MODAL INFORMER COPROPRIÉTAIRES =====
+    function renderInformerCoproModal() {
+      return `
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn" onclick="if(event.target === event.currentTarget) setState({showInformerCopro: false})">
+          <div class="glass rounded-2xl p-8 max-w-3xl w-full animate-slideInUp max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-bold text-white">📢 Informer les Copropriétaires</h2>
+              <button onclick="setState({showInformerCopro: false})" class="text-slate-400 hover:text-white transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="space-y-5">
+              <!-- Signalement concerné -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Signalement concerné</label>
+                <div class="p-4 bg-slate-800/50 border border-purple-500/30 rounded-xl">
+                  <p class="text-white font-semibold">Fuite d'eau - Résidence Les Oliviers</p>
+                  <p class="text-slate-400 text-sm">Appartement 12B - Priorité HAUTE</p>
+                </div>
+              </div>
+
+              <!-- Copropriété -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Copropriété</label>
+                <div class="p-4 bg-slate-700 rounded-xl flex items-center justify-between">
+                  <div>
+                    <p class="text-white font-semibold">Résidence Les Oliviers</p>
+                    <p class="text-slate-400 text-sm">45 copropriétaires</p>
+                  </div>
+                  <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-semibold">
+                    Tous les résidents
+                  </span>
+                </div>
+              </div>
+
+              <!-- Objet -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Objet *</label>
+                <input
+                  type="text"
+                  value="Mise à jour : Intervention fuite d'eau Appt 12B"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+              </div>
+
+              <!-- Message pré-rempli -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-2">Message *</label>
+                <textarea
+                  rows="8"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+                >Chers copropriétaires,
+
+Nous vous informons de l'avancement concernant le signalement de fuite d'eau dans l'appartement 12B.
+
+État actuel :
+✅ Signalement traité (03/02/2026)
+✅ Devis demandé et reçu - Plomberie Martin : 450€ TTC
+✅ Intervention planifiée le 10/02/2026 à 14h00
+
+L'accès aux parties communes pourrait être nécessaire durant l'intervention.
+
+Nous vous tiendrons informés de l'évolution de la situation.
+
+Cordialement,
+Le Syndic</textarea>
+              </div>
+
+              <!-- Options -->
+              <div class="glass rounded-xl p-5 bg-purple-500/5 border-purple-500/20">
+                <h3 class="text-white font-bold mb-4">Options d'envoi</h3>
+                <div class="space-y-3">
+                  <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" checked class="w-5 h-5 mt-0.5" />
+                    <div class="flex-1">
+                      <div class="text-white font-semibold group-hover:text-purple-300 transition-colors">
+                        📧 Envoyer par email
+                      </div>
+                      <div class="text-slate-400 text-sm">
+                        Tous les copropriétaires recevront un email
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" checked class="w-5 h-5 mt-0.5" />
+                    <div class="flex-1">
+                      <div class="text-white font-semibold group-hover:text-purple-300 transition-colors">
+                        📱 Notification app mobile
+                      </div>
+                      <div class="text-slate-400 text-sm">
+                        Push notification pour les utilisateurs de l'app
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" class="w-5 h-5 mt-0.5" />
+                    <div class="flex-1">
+                      <div class="text-white font-semibold group-hover:text-purple-300 transition-colors">
+                        📄 Joindre le devis
+                      </div>
+                      <div class="text-slate-400 text-sm">
+                        Ajouter le devis de 450€ en pièce jointe
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" class="w-5 h-5 mt-0.5" />
+                    <div class="flex-1">
+                      <div class="text-white font-semibold group-hover:text-purple-300 transition-colors">
+                        📷 Joindre les photos
+                      </div>
+                      <div class="text-slate-400 text-sm">
+                        Inclure les 3 photos du signalement
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-4 pt-4">
+                <button
+                  onclick="informerCoproprieteaires(); setState({showInformerCopro: false})"
+                  class="flex-1 px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg"
+                >
+                  📢 Envoyer la mise à jour
+                </button>
+                <button
+                  onclick="setState({showInformerCopro: false})"
+                  class="px-6 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-semibold transition-all"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     function renderSignalementDetail() {
       const sig = state.syndic.signalements.find(s => s.id === state.selectedSignalementId);
       if (!sig) return '';
@@ -3886,36 +4409,20 @@
     }
 
     function handleRegistrationComplete() {
-      // Initialiser Stripe (en production, utilisez votre clé publique)
-      const stripe = Stripe('pk_test_51QdVNqP5g8YlXKFvQqGhzXrAdjBKh0Kb3mVh6JQa8kNGK0DL8TgJ5pGqHlDCuLBQzqEcQ6k0Y9sDFwHFmXjYG8vB00E1K7gHJK'); // Clé de test Stripe
-      
       const selectedPlan = state.subscription.plans[state.registrationData.selectedPlan];
-      const price = selectedPlan.price[state.registrationData.billingCycle];
+      const price = selectedPlan ? selectedPlan.price[state.registrationData.billingCycle] : 149;
       
-      // En production, vous créeriez une session Checkout sur votre serveur backend
-      // Pour la démo, on simule le paiement
+      // MODE DÉMO - Bypass du paiement
+      // En production, vous intégreriez vraiment Stripe Checkout
       
-      // Simuler l'ouverture de Stripe Checkout
-      const confirmPayment = confirm(
-        `💳 Paiement Stripe\\n\\n` +
-        `Plan : ${selectedPlan.name}\\n` +
-        `Montant : ${price}€ ${state.registrationData.billingCycle === 'monthly' ? '/mois' : '/an'}\\n\\n` +
-        `Cliquez sur OK pour simuler le paiement Stripe.\\n` +
-        `(En production, vous serez redirigé vers Stripe Checkout)`
-      );
+      // Simuler le succès du paiement directement
+      showToast('✅ Compte créé avec succès ! Bienvenue sur Realtix Pro.');
       
-      if (!confirmPayment) {
-        return;
-      }
-      
-      // Simuler le succès du paiement
+      // Créer un utilisateur manager par défaut et connecter
       setTimeout(() => {
-        alert('✅ Paiement validé !\\n\\nVotre abonnement est actif.\\nAccès immédiat à toutes les fonctionnalités.');
-        
-        // Créer un utilisateur manager par défaut et lancer le tutoriel
         setState({
           currentUser: { 
-            name: state.registrationData.name || 'Nouveau Gérant', 
+            name: state.registrationData.name || 'Philippe Rousseau', 
             role: 'manager', 
             email: state.registrationData.email || 'contact@agence.com'
           },
@@ -6482,620 +6989,979 @@
       
       return `
         <div class="space-y-6">
-          <!-- Header -->
-          <div class="glass rounded-2xl p-6 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-500/20">
-            <div class="flex items-center justify-between mb-4">
+          <!-- En-tête Espace Syndic -->
+          <div class="glass rounded-2xl p-8">
+            <div class="flex items-start justify-between">
               <div>
-                <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
-                  🏢 Realtix Pro Syndic
-                  <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-semibold">PRO</span>
-                </h2>
-                <p class="text-slate-300 mb-1">Outil de pilotage et communication pour syndics</p>
-                <p class="text-slate-400 text-sm italic">Complémentaire au logiciel comptable</p>
+                <h1 class="text-4xl font-bold text-white mb-3" style="font-family: 'Poppins', sans-serif;">
+                  🏢 Espace Syndic – Gestion des copropriétés
+                </h1>
+                <p class="text-slate-300 text-lg" style="font-family: 'Inter', sans-serif;">
+                  Centralisez signalements, interventions et communication copropriétaires
+                </p>
               </div>
-            </div>
-
-            <!-- Tableau de bord rapide -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              <div class="glass rounded-xl p-4 hover:border-red-400/50 transition-all cursor-pointer" onclick="setState({syndicTab: 'signalements'})">
-                <div class="text-3xl font-bold text-red-400 mb-1">
-                  ${state.syndic.signalements.filter(s => s.status !== 'Résolu').length}
-                </div>
-                <div class="text-slate-400 text-xs">Signalements ouverts</div>
-              </div>
-              <div class="glass rounded-xl p-4 hover:border-amber-400/50 transition-all cursor-pointer" onclick="setState({syndicTab: 'travaux'})">
-                <div class="text-3xl font-bold text-amber-400 mb-1">
-                  ${state.syndic.interventions.filter(i => i.status === 'pending').length}
-                </div>
-                <div class="text-slate-400 text-xs">Travaux en cours</div>
-              </div>
-              <div class="glass rounded-xl p-4 hover:border-blue-400/50 transition-all cursor-pointer" onclick="setState({syndicTab: 'communication'})">
-                <div class="text-3xl font-bold text-blue-400 mb-1">
-                  ${state.syndic.messages.reduce((sum, m) => sum + (m.recipients - m.readBy), 0)}
-                </div>
-                <div class="text-slate-400 text-xs">Messages non lus</div>
-              </div>
-              <div class="glass rounded-xl p-4 hover:border-indigo-400/50 transition-all cursor-pointer" onclick="setState({syndicTab: 'ag'})">
-                <div class="text-2xl font-bold text-indigo-400 mb-1">
-                  ${Math.ceil((new Date(state.syndic.coproperties[0]?.nextAG) - new Date()) / (1000*60*60*24))}j
-                </div>
-                <div class="text-slate-400 text-xs">Prochaine AG</div>
-              </div>
-            </div>
-
-            <!-- Actions rapides -->
-            <div class="flex flex-wrap gap-2">
-              <button onclick="setState({showModeleMessages: true})" class="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg text-sm font-semibold transition-all">
-                📝 Modèles de messages
-              </button>
-              <button onclick="exportSignalementsPDF()" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-semibold transition-all">
-                📄 Export PDF signalements
-              </button>
-              <button onclick="setState({showRappelsTravaux: true})" class="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg text-sm font-semibold transition-all">
-                ⏰ Rappels automatiques travaux
-              </button>
-            </div>
-          </div>
-
-          <!-- Tabs Navigation -->
-          <div class="glass rounded-2xl p-2">
-            <div class="flex flex-wrap gap-2">
-              <button onclick="setState({syndicTab: 'signalements'})" class="flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${selectedTab === 'signalements' ? 'bg-purple-500 text-white' : 'text-slate-400 hover:bg-slate-700/50'}">
-                🚨 Signalements
-              </button>
-              <button onclick="setState({syndicTab: 'communication'})" class="flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${selectedTab === 'communication' ? 'bg-purple-500 text-white' : 'text-slate-400 hover:bg-slate-700/50'}">
-                💬 Communication
-              </button>
-              <button onclick="setState({syndicTab: 'travaux'})" class="flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${selectedTab === 'travaux' ? 'bg-purple-500 text-white' : 'text-slate-400 hover:bg-slate-700/50'}">
-                🔧 Travaux
-              </button>
-              <button onclick="setState({syndicTab: 'documents'})" class="flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${selectedTab === 'documents' ? 'bg-purple-500 text-white' : 'text-slate-400 hover:bg-slate-700/50'}">
-                📁 Documents
-              </button>
-              <button onclick="setState({syndicTab: 'ag'})" class="flex-1 px-4 py-3 rounded-xl font-semibold transition-all ${selectedTab === 'ag' ? 'bg-purple-500 text-white' : 'text-slate-400 hover:bg-slate-700/50'}">
-                📋 AG
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab Content -->
-          ${selectedTab === 'signalements' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">🚨 Signalements Copropriété</h3>
-                <button onclick="setState({showNewSignalement: true})" class="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  + Nouveau signalement
-                </button>
-              </div>
-
-              <!-- Signalements List -->
-              <div class="space-y-4">
-                ${state.syndic.signalements.map(sig => {
-                  const copro = state.syndic.coproperties.find(c => c.id === sig.coproId);
-                  const totalResidents = state.syndic.residents.filter(r => r.coproId === sig.coproId).length;
-                  const readRate = Math.floor((sig.readBy.length / totalResidents) * 100);
-                  const hasIntervention = sig.createIntervention && sig.interventionId;
-                  const wasInformed = sig.informCopro;
-                  
-                  return `
-                    <div class="glass rounded-xl p-6 ${sig.status === 'Résolu' ? 'opacity-60' : ''} hover:border-purple-400/50 transition-all">
-                      <div class="flex items-start justify-between mb-4">
-                        <div class="flex-1">
-                          <div class="flex items-center gap-2 mb-2 flex-wrap">
-                            <span class="px-3 py-1 ${sig.priority === 'haute' ? 'bg-red-500/20 text-red-400' : sig.priority === 'moyenne' ? 'bg-amber-500/20 text-amber-400' : 'bg-blue-500/20 text-blue-400'} rounded-full text-xs font-bold">${sig.type}</span>
-                            <span class="text-slate-400 text-sm">${copro?.name || '-'}</span>
-                            ${hasIntervention ? '<span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">🔧 Intervention</span>' : ''}
-                            ${wasInformed ? '<span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">📢 Copro informée</span>' : ''}
-                          </div>
-                          <p class="text-white font-semibold text-lg mb-2">${sig.description}</p>
-                          <div class="flex items-center gap-3 text-sm text-slate-400 mb-2">
-                            <span>📅 ${new Date(sig.date).toLocaleDateString('fr-FR')}</span>
-                            <span>•</span>
-                            <span>👤 ${sig.author}</span>
-                            ${sig.photos.length > 0 ? `<span>• 📷 ${sig.photos.length} photo(s)</span>` : ''}
-                          </div>
-                          <div class="flex items-center gap-2 text-xs">
-                            <span class="text-green-400">✓ Lu par ${sig.readBy.length}/${totalResidents} (${readRate}%)</span>
-                            ${sig.relancesSent > 0 ? `<span class="text-amber-400">• ${sig.relancesSent} relance(s)</span>` : ''}
-                          </div>
-                        </div>
-                        <div class="flex flex-col items-end gap-2">
-                          <span class="px-4 py-2 ${
-                            sig.status === 'Résolu' ? 'bg-green-500/20 text-green-400' :
-                            sig.status === 'En cours' ? 'bg-amber-500/20 text-amber-400' :
-                            'bg-blue-500/20 text-blue-400'
-                          } rounded-lg font-semibold text-sm">${sig.status}</span>
-                          <button onclick="setState({showSignalementDetail: true, selectedSignalementId: ${sig.id}})" class="text-purple-400 hover:text-purple-300 text-sm font-semibold">
-                            📋 Fiche complète →
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          ${selectedTab === 'communication' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">💬 Communication Immeuble</h3>
-                <button onclick="setState({showNewMessage: true})" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  ✉️ Nouveau message
-                </button>
-              </div>
-
-              <!-- Messages récents -->
-              <div class="space-y-4">
-                ${state.syndic.messages.map(msg => {
-                  const copro = state.syndic.coproperties.find(c => c.id === msg.coproId);
-                  const readRate = Math.floor((msg.readBy / msg.recipients) * 100);
-                  return `
-                    <div class="glass rounded-xl p-6 hover:border-purple-400/50 transition-all cursor-pointer">
-                      <div class="flex items-start justify-between mb-4">
-                        <div class="flex-1">
-                          <div class="flex items-center gap-3 mb-2">
-                            <span class="text-purple-400 font-semibold">${copro?.name || 'Copropriété'}</span>
-                            <span class="text-slate-500 text-xs">•</span>
-                            <span class="text-slate-400 text-sm">${msg.recipients} destinataires</span>
-                            <span class="text-slate-500 text-xs">•</span>
-                            <span class="text-green-400 text-sm">${msg.readBy} lus (${readRate}%)</span>
-                          </div>
-                          <h4 class="text-white font-bold text-lg mb-2">${msg.subject}</h4>
-                          <p class="text-slate-300 text-sm mb-3 whitespace-pre-line">${msg.content.substring(0, 150)}${msg.content.length > 150 ? '...' : ''}</p>
-                          <div class="flex items-center gap-3">
-                            <p class="text-slate-400 text-xs">📅 ${new Date(msg.date).toLocaleDateString('fr-FR')}</p>
-                            <span class="text-slate-500 text-xs">•</span>
-                            <p class="text-slate-400 text-xs">👤 ${msg.author}</p>
-                          </div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                          <button class="text-purple-400 hover:text-purple-300 text-sm font-semibold">📖 Voir détail</button>
-                          <div class="text-right">
-                            <div class="w-24 bg-slate-700 rounded-full h-2">
-                              <div class="bg-green-400 h-2 rounded-full" style="width: ${readRate}%"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          ${selectedTab === 'budget' ? `
-            <div class="space-y-6">
-              <h3 class="text-2xl font-bold text-white">💰 Suivi Budgétaire Informatif</h3>
               
-              <div class="grid md:grid-cols-2 gap-6">
-                ${state.syndic.coproperties.map(copro => `
-                  <div class="glass rounded-xl p-6">
-                    <h4 class="text-xl font-bold text-white mb-4">${copro.name}</h4>
-                    <div class="space-y-3">
-                      <div class="flex justify-between items-center">
-                        <span class="text-slate-300">Budget annuel</span>
-                        <span class="text-white font-bold text-lg">${copro.budget.toLocaleString()}€</span>
-                      </div>
-                      <div class="flex justify-between items-center">
-                        <span class="text-slate-300">Dépensé</span>
-                        <span class="text-amber-400 font-bold">${Math.floor(copro.budget * 0.65).toLocaleString()}€</span>
-                      </div>
-                      <div class="flex justify-between items-center">
-                        <span class="text-slate-300">Reste à engager</span>
-                        <span class="text-green-400 font-bold">${Math.floor(copro.budget * 0.35).toLocaleString()}€</span>
-                      </div>
-                      <div class="mt-4">
-                        <div class="w-full bg-slate-700 rounded-full h-3">
-                          <div class="bg-gradient-to-r from-amber-500 to-amber-600 h-3 rounded-full" style="width: 65%"></div>
-                        </div>
-                        <p class="text-slate-400 text-xs mt-2 text-center">65% du budget utilisé</p>
-                      </div>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          ${selectedTab === 'travaux' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">🔧 Gestion des Travaux</h3>
-                <button onclick="setState({showNewIntervention: true})" class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  + Nouvelle intervention
+              <!-- Boutons principaux -->
+              <div class="flex items-center gap-3">
+                <button 
+                  onclick="setState({showNewSignalement: true})"
+                  class="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold hover:scale-105 transition-all shadow-lg hover:shadow-yellow-500/50"
+                  style="font-family: 'Poppins', sans-serif;"
+                >
+                  🟡 + Nouveau signalement
+                </button>
+                <button 
+                  onclick="setState({showNewMessage: true})"
+                  class="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold hover:scale-105 transition-all shadow-lg hover:shadow-purple-500/50"
+                  style="font-family: 'Poppins', sans-serif;"
+                >
+                  🟣 Envoyer un message
+                </button>
+                <button 
+                  onclick="setState({showNewInterventionModal: true})"
+                  class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold hover:scale-105 transition-all shadow-lg hover:shadow-blue-500/50"
+                  style="font-family: 'Poppins', sans-serif;"
+                >
+                  🔵 Planifier intervention
                 </button>
               </div>
+            </div>
+          </div>
 
-              <div class="space-y-4">
-                ${state.syndic.interventions.map(int => {
-                  const copro = state.syndic.coproperties.find(c => c.id === int.coproId);
+          <!-- 4 Onglets internes -->
+          <div class="glass rounded-2xl overflow-hidden">
+            <!-- Tabs navigation -->
+            <div class="flex border-b border-slate-700 overflow-x-auto">
+              <button 
+                onclick="setState({syndicTab: 'signalements'})"
+                class="flex-1 px-6 py-4 font-bold transition-all whitespace-nowrap ${selectedTab === 'signalements' ? 'bg-amber-500/20 text-amber-400 border-b-2 border-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-700/30'}"
+                style="font-family: 'Poppins', sans-serif;"
+              >
+                📋 SIGNALEMENTS
+              </button>
+              <button 
+                onclick="setState({syndicTab: 'detail-signalement'})"
+                class="flex-1 px-6 py-4 font-bold transition-all whitespace-nowrap ${selectedTab === 'detail-signalement' ? 'bg-amber-500/20 text-amber-400 border-b-2 border-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-700/30'}"
+                style="font-family: 'Poppins', sans-serif;"
+              >
+                📝 DÉTAIL SIGNALEMENT
+              </button>
+              <button 
+                onclick="setState({syndicTab: 'journal'})"
+                class="flex-1 px-6 py-4 font-bold transition-all whitespace-nowrap ${selectedTab === 'journal' ? 'bg-amber-500/20 text-amber-400 border-b-2 border-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-700/30'}"
+                style="font-family: 'Poppins', sans-serif;"
+              >
+                📖 JOURNAL D'ACTIVITÉ
+              </button>
+              <button 
+                onclick="setState({syndicTab: 'interventions'})"
+                class="flex-1 px-6 py-4 font-bold transition-all whitespace-nowrap ${selectedTab === 'interventions' ? 'bg-amber-500/20 text-amber-400 border-b-2 border-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-700/30'}"
+                style="font-family: 'Poppins', sans-serif;"
+              >
+                🔧 INTERVENTIONS
+              </button>
+              <button 
+                onclick="setState({syndicTab: 'communication'})"
+                class="flex-1 px-6 py-4 font-bold transition-all whitespace-nowrap ${selectedTab === 'communication' ? 'bg-amber-500/20 text-amber-400 border-b-2 border-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-700/30'}"
+                style="font-family: 'Poppins', sans-serif;"
+              >
+                📨 COMMUNICATION
+              </button>
+              <button 
+                onclick="setState({syndicTab: 'historique'})"
+                class="flex-1 px-6 py-4 font-bold transition-all whitespace-nowrap ${selectedTab === 'historique' ? 'bg-amber-500/20 text-amber-400 border-b-2 border-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-700/30'}"
+                style="font-family: 'Poppins', sans-serif;"
+              >
+                📜 HISTORIQUE
+              </button>
+            </div>
+
+            <!-- Tab content -->
+            <div class="p-6">
+              ${selectedTab === 'signalements' ? renderSyndicSignalements() : ''}
+              ${selectedTab === 'detail-signalement' ? renderSyndicDetailSignalement() : ''}
+              ${selectedTab === 'journal' ? renderSyndicJournalActivite() : ''}
+              ${selectedTab === 'interventions' ? renderSyndicInterventions() : ''}
+              ${selectedTab === 'communication' ? renderSyndicCommunication() : ''}
+              ${selectedTab === 'historique' ? renderSyndicHistorique() : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // A) ONGLET SIGNALEMENTS
+    function renderSyndicSignalements() {
+      const signalements = state.syndic?.signalements || [];
+      
+      return `
+        <div class="space-y-4">
+          <h2 class="text-2xl font-bold text-white mb-4" style="font-family: 'Poppins', sans-serif;">
+            Liste des signalements
+          </h2>
+
+          <!-- Tableau des signalements -->
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-slate-700">
+                  <th class="text-left p-4 text-slate-400 font-semibold" style="font-family: 'Inter', sans-serif;">Copropriété</th>
+                  <th class="text-left p-4 text-slate-400 font-semibold" style="font-family: 'Inter', sans-serif;">Type</th>
+                  <th class="text-left p-4 text-slate-400 font-semibold" style="font-family: 'Inter', sans-serif;">Priorité</th>
+                  <th class="text-left p-4 text-slate-400 font-semibold" style="font-family: 'Inter', sans-serif;">Date</th>
+                  <th class="text-left p-4 text-slate-400 font-semibold" style="font-family: 'Inter', sans-serif;">Statut</th>
+                  <th class="text-left p-4 text-slate-400 font-semibold" style="font-family: 'Inter', sans-serif;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${signalements.length === 0 ? `
+                  <tr>
+                    <td colspan="6" class="text-center p-8 text-slate-400">
+                      Aucun signalement pour le moment
+                    </td>
+                  </tr>
+                ` : signalements.map(sig => {
+                  const copro = state.syndic.coproperties.find(c => c.id === sig.coproId);
+                  const priorityColors = {
+                    'haute': 'bg-red-500/20 text-red-400',
+                    'moyenne': 'bg-yellow-500/20 text-yellow-400',
+                    'basse': 'bg-green-500/20 text-green-400'
+                  };
+                  const statusColors = {
+                    'Nouveau': 'bg-blue-500/20 text-blue-400',
+                    'Reçu': 'bg-cyan-500/20 text-cyan-400',
+                    'En cours': 'bg-purple-500/20 text-purple-400',
+                    'Résolu': 'bg-green-500/20 text-green-400'
+                  };
+                  
                   return `
-                    <div class="glass rounded-xl p-6">
-                      <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                          <div class="flex items-center gap-3 mb-2">
-                            <span class="px-3 py-1 bg-slate-700 text-slate-300 rounded-lg text-sm font-semibold">${int.type}</span>
-                            <span class="text-slate-400 text-sm">${copro?.name}</span>
-                          </div>
-                          <p class="text-white font-bold text-lg mb-2">${int.description}</p>
-                          <p class="text-slate-400 text-sm">📅 ${new Date(int.date).toLocaleDateString('fr-FR')}</p>
-                        </div>
-                        <div class="text-right">
-                          <p class="text-white font-bold text-2xl mb-2">${int.cost}€</p>
-                          <span class="px-3 py-1 ${int.status === 'completed' ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'} rounded-lg text-sm font-semibold">
-                            ${int.status === 'completed' ? '✓ Terminé' : '⏳ En cours'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    <tr class="border-b border-slate-700/50 hover:bg-slate-700/30 transition-all cursor-pointer" onclick="setState({showSignalementDetail: true, selectedSignalementId: ${sig.id}})">
+                      <td class="p-4">
+                        <div class="text-white font-medium" style="font-family: 'Inter', sans-serif;">${copro?.name || 'N/A'}</div>
+                        <div class="text-sm text-slate-400">${sig.description?.substring(0, 30)}...</div>
+                      </td>
+                      <td class="p-4">
+                        <span class="px-3 py-1 rounded-full bg-slate-700 text-slate-300 text-sm" style="font-family: 'Inter', sans-serif;">
+                          ${sig.type}
+                        </span>
+                      </td>
+                      <td class="p-4">
+                        <span class="px-3 py-1 rounded-full ${priorityColors[sig.priority]} text-sm font-semibold" style="font-family: 'Inter', sans-serif;">
+                          ${sig.priority === 'haute' ? '🔴' : sig.priority === 'moyenne' ? '🟡' : '🟢'} ${sig.priority.toUpperCase()}
+                        </span>
+                      </td>
+                      <td class="p-4 text-slate-300" style="font-family: 'Inter', sans-serif;">
+                        ${new Date(sig.date).toLocaleDateString('fr-FR')}
+                      </td>
+                      <td class="p-4">
+                        <span class="px-3 py-1 rounded-full ${statusColors[sig.status]} text-sm font-semibold" style="font-family: 'Inter', sans-serif;">
+                          ${sig.status}
+                        </span>
+                      </td>
+                      <td class="p-4">
+                        <button class="text-amber-400 hover:text-amber-300 font-medium" style="font-family: 'Inter', sans-serif;">
+                          Voir détails →
+                        </button>
+                      </td>
+                    </tr>
                   `;
                 }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // A2) ONGLET DÉTAIL SIGNALEMENT
+    function renderSyndicDetailSignalement() {
+      return `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-white mb-6" style="font-family: 'Poppins', sans-serif;">
+            📝 Détail du Signalement
+          </h2>
+
+          <!-- Info Signalement Sélectionné -->
+          <div class="glass rounded-xl p-6 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-500/20">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-xl font-bold text-white mb-2">Fuite d'eau - Résidence Les Oliviers</h3>
+                <p class="text-slate-300 mb-3">Appartement 12B - Fuite d'eau hall entrée</p>
+                <div class="flex items-center gap-3">
+                  <span class="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm font-bold">🔴 HAUTE</span>
+                  <span class="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-sm font-bold">En cours</span>
+                  <span class="text-slate-400 text-sm">📅 03/02/2026</span>
+                </div>
               </div>
+              <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-all">
+                Changer de signalement
+              </button>
             </div>
-          ` : ''}
+          </div>
 
-          ${selectedTab === 'documents' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">📁 Documents</h3>
-                <button class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  📤 Uploader
-                </button>
-              </div>
-
-              <div class="grid md:grid-cols-3 gap-4">
-                ${state.syndic.documents.map(doc => {
-                  const copro = state.syndic.coproperties.find(c => c.id === doc.coproId);
-                  const icons = {pv: '📋', contrat: '📝', reglement: '📜'};
-                  return `
-                    <div class="glass rounded-xl p-6 hover:border-purple-400/50 transition-all cursor-pointer">
-                      <div class="flex items-start gap-3">
-                        <div class="text-4xl">${icons[doc.type] || '📄'}</div>
-                        <div class="flex-1 min-w-0">
-                          <h4 class="text-white font-semibold mb-1 truncate">${doc.name}</h4>
-                          <p class="text-slate-400 text-xs mb-2">${copro?.name}</p>
-                          <div class="flex items-center justify-between text-xs">
-                            <span class="text-slate-500">${new Date(doc.date).toLocaleDateString('fr-FR')}</span>
-                            <span class="text-slate-500">${doc.size}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          ${selectedTab === 'ag' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">📋 Assemblée Générale</h3>
-                <button class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  📧 Convoquer AG
-                </button>
-              </div>
-
-              <div class="grid md:grid-cols-2 gap-6">
-                ${state.syndic.coproperties.map(copro => `
-                  <div class="glass rounded-xl p-6">
-                    <h4 class="text-xl font-bold text-white mb-4">${copro.name}</h4>
-                    <div class="space-y-4">
-                      <div class="p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl">
-                        <p class="text-slate-300 text-sm mb-2">Prochaine AG</p>
-                        <p class="text-white font-bold text-lg">${new Date(copro.nextAG).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long', year: 'numeric'})}</p>
-                      </div>
-                      <div class="grid grid-cols-2 gap-3">
-                        <button class="px-4 py-3 bg-slate-700/50 hover:bg-slate-700 rounded-xl text-sm font-semibold text-slate-300 transition-all">
-                          📝 Ordre du jour
-                        </button>
-                        <button class="px-4 py-3 bg-slate-700/50 hover:bg-slate-700 rounded-xl text-sm font-semibold text-slate-300 transition-all">
-                          🗂️ PV précédents
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          ${selectedTab === 'coproprietaires' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">👥 Module Copropriétaires</h3>
-                <button class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  + Ajouter copropriétaire
-                </button>
-              </div>
-
-              <!-- Liste par résidence -->
-              ${state.syndic.coproperties.map(copro => {
-                const residents = state.syndic.residents.filter(r => r.coproId === copro.id);
-                return `
-                  <div class="glass rounded-2xl p-6">
-                    <h4 class="text-xl font-bold text-white mb-4">${copro.name}</h4>
-                    <p class="text-slate-400 text-sm mb-4">${residents.length} copropriétaire(s) • ${copro.lots} lots</p>
-                    
-                    <div class="space-y-3">
-                      ${residents.map(resident => `
-                        <div class="glass rounded-xl p-4 hover:border-green-400/50 transition-all">
-                          <div class="flex items-center justify-between">
-                            <div class="flex-1">
-                              <div class="flex items-center gap-3 mb-2">
-                                <span class="text-white font-bold">${resident.name}</span>
-                                <span class="px-2 py-1 bg-slate-700 text-slate-300 rounded text-xs">${resident.lot}</span>
-                                ${resident.role === 'conseil' ? '<span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">🏛️ Conseil</span>' : ''}
-                              </div>
-                              <div class="flex items-center gap-4 text-sm">
-                                <span class="text-slate-400">📧 ${resident.email}</span>
-                                <span class="text-slate-400">📱 ${resident.phone}</span>
-                              </div>
-                            </div>
-                            <div class="flex gap-2">
-                              <button class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg text-sm font-semibold">
-                                📜 Historique
-                              </button>
-                              <button class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg text-sm font-semibold">
-                                🚨 Signalements
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      `).join('')}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          ` : ''}
-
-          ${selectedTab === 'journal' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">📜 Journal Légal</h3>
-                <button class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  📄 Export PDF
-                </button>
-              </div>
-
-              <div class="glass rounded-2xl p-4">
-                <p class="text-slate-300 text-sm mb-4">Toutes les actions sont horodatées et traçables pour garantir la transparence.</p>
-                
-                <div class="space-y-3">
-                  ${[
-                    {action: 'Message envoyé', user: 'Marie Dubois', target: 'Résidence Les Oliviers - 45 copropriétaires', date: '2026-02-06 14:23:12', type: 'create'},
-                    {action: 'Intervention créée', user: 'Marie Dubois', target: 'Plomberie - Fuite hall entrée', date: '2026-02-06 10:15:45', type: 'create'},
-                    {action: 'Document uploadé', user: 'Marie Dubois', target: 'PV AG 2025', date: '2026-02-05 16:30:22', type: 'create'},
-                    {action: 'Budget modifié', user: 'Marie Dubois', target: 'Le Clos des Vignes', date: '2026-02-04 09:12:33', type: 'modify'},
-                    {action: 'Copropriétaire ajouté', user: 'Marie Dubois', target: 'Jean Dupont - Lot A12', date: '2026-02-03 11:45:18', type: 'create'}
-                  ].map(log => `
-                    <div class="flex items-center gap-4 p-4 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all">
-                      <div class="text-3xl">
-                        ${log.type === 'create' ? '✅' : log.type === 'modify' ? '✏️' : '❌'}
-                      </div>
-                      <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                          <span class="text-white font-bold">${log.action}</span>
-                          <span class="px-2 py-1 ${log.type === 'create' ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'} rounded text-xs">${log.type === 'create' ? 'Création' : 'Modification'}</span>
-                        </div>
-                        <p class="text-slate-300 text-sm">${log.target}</p>
-                        <div class="flex items-center gap-3 mt-2 text-xs">
-                          <span class="text-slate-400">👤 ${log.user}</span>
-                          <span class="text-slate-500">•</span>
-                          <span class="text-slate-400">🕐 ${log.date}</span>
-                        </div>
-                      </div>
-                    </div>
-                  `).join('')}
+          <!-- 4 Actions Principales -->
+          <div class="grid md:grid-cols-2 gap-6">
+            
+            <!-- 1. Demander devis -->
+            <div class="glass rounded-xl p-6 hover:border-amber-400/50 transition-all cursor-pointer" onclick="setState({showDemandeDevis: true})">
+              <div class="flex items-start gap-4">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center text-3xl">
+                  📄
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold text-white mb-2" style="font-family: 'Poppins', sans-serif;">
+                    Demander un devis
+                  </h3>
+                  <p class="text-slate-300 text-sm">
+                    Solliciter un ou plusieurs artisans pour obtenir un devis détaillé
+                  </p>
                 </div>
               </div>
             </div>
-          ` : ''}
 
-          ${selectedTab === 'ag-enrichie' ? `
-            <div class="space-y-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-2xl font-bold text-white">🗳️ AG Enrichie</h3>
-                <button class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-xl font-bold transition-all shadow-lg">
-                  🎯 Nouvelle AG
-                </button>
+            <!-- 2. Assigner artisan -->
+            <div class="glass rounded-xl p-6 hover:border-blue-400/50 transition-all cursor-pointer" onclick="setState({showAssignArtisan: true})">
+              <div class="flex items-start gap-4">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center text-3xl">
+                  🔧
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold text-white mb-2" style="font-family: 'Poppins', sans-serif;">
+                    Assigner un artisan
+                  </h3>
+                  <p class="text-slate-300 text-sm">
+                    Attribuer ce signalement à un artisan ou prestataire de confiance
+                  </p>
+                </div>
               </div>
+            </div>
 
-              ${state.syndic.coproperties.map(copro => `
-                <div class="glass rounded-2xl p-6">
-                  <h4 class="text-xl font-bold text-white mb-4">${copro.name} - AG du ${new Date(copro.nextAG).toLocaleDateString('fr-FR')}</h4>
-                  
-                  <!-- Stats présence -->
-                  <div class="grid grid-cols-4 gap-4 mb-6">
-                    <div class="glass rounded-xl p-4 text-center">
-                      <div class="text-3xl font-bold text-green-400">${Math.floor(copro.lots * 0.78)}</div>
-                      <div class="text-slate-400 text-sm">Présents</div>
-                    </div>
-                    <div class="glass rounded-xl p-4 text-center">
-                      <div class="text-3xl font-bold text-amber-400">${Math.floor(copro.lots * 0.15)}</div>
-                      <div class="text-slate-400 text-sm">Pouvoirs</div>
-                    </div>
-                    <div class="glass rounded-xl p-4 text-center">
-                      <div class="text-3xl font-bold text-red-400">${Math.floor(copro.lots * 0.07)}</div>
-                      <div class="text-slate-400 text-sm">Absents</div>
-                    </div>
-                    <div class="glass rounded-xl p-4 text-center">
-                      <div class="text-3xl font-bold text-blue-400">78%</div>
-                      <div class="text-slate-400 text-sm">Quorum</div>
-                    </div>
-                  </div>
+            <!-- 3. Envoyer message -->
+            <div class="glass rounded-xl p-6 hover:border-purple-400/50 transition-all cursor-pointer" onclick="setState({showSendMessage: true})">
+              <div class="flex items-start gap-4">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center text-3xl">
+                  💬
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold text-white mb-2" style="font-family: 'Poppins', sans-serif;">
+                    Envoyer un message
+                  </h3>
+                  <p class="text-slate-300 text-sm">
+                    Informer les copropriétaires, le conseil syndical ou un résident
+                  </p>
+                </div>
+              </div>
+            </div>
 
-                  <!-- Résolutions -->
-                  <h5 class="text-white font-bold mb-3">📋 Résolutions</h5>
-                  <div class="space-y-3">
-                    ${[
-                      {num: 1, title: 'Approbation des comptes annuels', pour: 38, contre: 5, abstention: 2, status: 'adopted'},
-                      {num: 2, title: 'Travaux ravalement façade', pour: 32, contre: 10, abstention: 3, status: 'adopted'},
-                      {num: 3, title: 'Installation bornes électriques', pour: 18, contre: 22, abstention: 5, status: 'rejected'}
-                    ].map(res => {
-                      const total = res.pour + res.contre + res.abstention;
-                      const pourPct = Math.floor((res.pour / total) * 100);
-                      return `
-                        <div class="glass rounded-xl p-4">
-                          <div class="flex items-start justify-between mb-3">
-                            <div class="flex-1">
-                              <div class="flex items-center gap-2 mb-2">
-                                <span class="px-2 py-1 bg-slate-700 text-slate-300 rounded text-xs font-bold">R${res.num}</span>
-                                <span class="text-white font-semibold">${res.title}</span>
-                              </div>
-                            </div>
-                            <span class="px-3 py-1 ${res.status === 'adopted' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} rounded-lg font-bold text-sm">
-                              ${res.status === 'adopted' ? '✓ Adoptée' : '✗ Rejetée'}
-                            </span>
-                          </div>
-                          <div class="grid grid-cols-3 gap-3 mb-2">
-                            <div>
-                              <div class="text-green-400 font-bold">${res.pour} pour</div>
-                              <div class="text-slate-400 text-xs">${pourPct}%</div>
-                            </div>
-                            <div>
-                              <div class="text-red-400 font-bold">${res.contre} contre</div>
-                              <div class="text-slate-400 text-xs">${Math.floor((res.contre/total)*100)}%</div>
-                            </div>
-                            <div>
-                              <div class="text-slate-400 font-bold">${res.abstention} abs.</div>
-                              <div class="text-slate-400 text-xs">${Math.floor((res.abstention/total)*100)}%</div>
-                            </div>
-                          </div>
-                          <div class="w-full bg-slate-700 rounded-full h-3 flex overflow-hidden">
-                            <div class="bg-green-500" style="width: ${pourPct}%"></div>
-                            <div class="bg-red-500" style="width: ${Math.floor((res.contre/total)*100)}%"></div>
-                            <div class="bg-slate-500" style="width: ${Math.floor((res.abstention/total)*100)}%"></div>
-                          </div>
-                        </div>
-                      `;
-                    }).join('')}
-                  </div>
+            <!-- 4. Planifier intervention -->
+            <div class="glass rounded-xl p-6 hover:border-green-400/50 transition-all cursor-pointer" onclick="setState({showPlanifierIntervention: true})">
+              <div class="flex items-start gap-4">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center text-3xl">
+                  📅
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold text-white mb-2" style="font-family: 'Poppins', sans-serif;">
+                    Planifier intervention
+                  </h3>
+                  <p class="text-slate-300 text-sm">
+                    Fixer une date et créer une fiche d'intervention complète
+                  </p>
+                </div>
+              </div>
+            </div>
 
-                  <button class="w-full mt-4 px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl font-bold transition-all">
-                    📄 Générer PV automatique
-                  </button>
+          </div>
+
+          <!-- Informations complémentaires -->
+          <div class="glass rounded-xl p-6">
+            <h3 class="text-lg font-bold text-white mb-4">📋 Informations du signalement</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <p class="text-slate-400 text-sm mb-1">Auteur du signalement</p>
+                <p class="text-white font-semibold">Marie Dubois (Appt 12B)</p>
+              </div>
+              <div>
+                <p class="text-slate-400 text-sm mb-1">Artisan assigné</p>
+                <p class="text-white font-semibold">Plomberie Martin</p>
+              </div>
+              <div>
+                <p class="text-slate-400 text-sm mb-1">Date intervention prévue</p>
+                <p class="text-white font-semibold">05/02/2026 à 14h00</p>
+              </div>
+              <div>
+                <p class="text-slate-400 text-sm mb-1">Devis</p>
+                <p class="text-white font-semibold">450€ TTC</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description complète -->
+          <div class="glass rounded-xl p-6">
+            <h3 class="text-lg font-bold text-white mb-3">📝 Description</h3>
+            <p class="text-slate-300 leading-relaxed">
+              Fuite d'eau importante au niveau du hall d'entrée de l'appartement 12B. 
+              L'eau s'écoule depuis le plafond, probablement depuis l'appartement du dessus. 
+              Intervention urgente nécessaire pour éviter des dégâts supplémentaires.
+            </p>
+          </div>
+
+          <!-- Photos -->
+          <div class="glass rounded-xl p-6">
+            <h3 class="text-lg font-bold text-white mb-4">📷 Photos jointes</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              ${[1,2,3].map(i => `
+                <div class="aspect-square bg-slate-700 rounded-xl flex items-center justify-center text-slate-500 hover:scale-105 transition-all cursor-pointer">
+                  📷 Photo ${i}
                 </div>
               `).join('')}
             </div>
-          ` : ''}
+          </div>
 
-          ${selectedTab === 'connecteurs' ? `
-            <div class="space-y-6">
-              <h3 class="text-2xl font-bold text-white mb-4">🔌 Connecteurs & Imports</h3>
-              
-              <div class="grid md:grid-cols-2 gap-6">
-                <!-- Import CSV -->
-                <div class="glass rounded-2xl p-6">
-                  <div class="text-4xl mb-4">📊</div>
-                  <h4 class="text-xl font-bold text-white mb-2">Import CSV</h4>
-                  <p class="text-slate-400 text-sm mb-4">Importez vos copropriétaires, lots et données depuis un fichier CSV</p>
-                  <input type="file" accept=".csv" class="hidden" id="csv-upload" />
-                  <label for="csv-upload" class="block w-full px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-xl font-semibold text-center cursor-pointer transition-all">
-                    📂 Sélectionner fichier CSV
-                  </label>
-                </div>
-
-                <!-- Import ICS -->
-                <div class="glass rounded-2xl p-6">
-                  <div class="text-4xl mb-4">📅</div>
-                  <h4 class="text-xl font-bold text-white mb-2">Import ICS (Calendrier)</h4>
-                  <p class="text-slate-400 text-sm mb-4">Synchronisez les dates d\\'AG avec votre calendrier</p>
-                  <input type="file" accept=".ics" class="hidden" id="ics-upload" />
-                  <label for="ics-upload" class="block w-full px-4 py-3 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-xl font-semibold text-center cursor-pointer transition-all">
-                    📂 Sélectionner fichier ICS
-                  </label>
-                </div>
-
-                <!-- Logiciels de gestion -->
-                <div class="glass rounded-2xl p-6">
-                  <div class="text-4xl mb-4">💻</div>
-                  <h4 class="text-xl font-bold text-white mb-2">Logiciels de gestion</h4>
-                  <p class="text-slate-400 text-sm mb-4">Connectez votre logiciel de syndic existant</p>
-                  <div class="space-y-2">
-                    <button class="w-full px-4 py-3 bg-slate-700/50 hover:bg-slate-700 rounded-xl font-semibold text-slate-300 transition-all text-left">
-                      🏢 Vilogi
-                    </button>
-                    <button class="w-full px-4 py-3 bg-slate-700/50 hover:bg-slate-700 rounded-xl font-semibold text-slate-300 transition-all text-left">
-                      🏠 Immo Facile
-                    </button>
-                    <button class="w-full px-4 py-3 bg-slate-700/50 hover:bg-slate-700 rounded-xl font-semibold text-slate-300 transition-all text-left">
-                      📋 Autre logiciel
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Import Emails -->
-                <div class="glass rounded-2xl p-6">
-                  <div class="text-4xl mb-4">📧</div>
-                  <h4 class="text-xl font-bold text-white mb-2">Import Emails</h4>
-                  <p class="text-slate-400 text-sm mb-4">Récupérez automatiquement les emails copropriétaires</p>
-                  <div class="space-y-2">
-                    <button class="w-full px-4 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-xl font-semibold transition-all">
-                      📮 Gmail
-                    </button>
-                    <button class="w-full px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-xl font-semibold transition-all">
-                      📬 Outlook
-                    </button>
-                    <button class="w-full px-4 py-3 bg-slate-700/50 hover:bg-slate-700 rounded-xl font-semibold text-slate-300 transition-all">
-                      📪 IMAP/POP3
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Historique imports -->
-              <div class="glass rounded-2xl p-6">
-                <h4 class="text-xl font-bold text-white mb-4">📜 Historique des imports</h4>
-                <div class="space-y-3">
-                  ${[
-                    {type: 'CSV', file: 'coproprietaires_residence.csv', items: 45, date: '2026-02-01 10:30', status: 'success'},
-                    {type: 'ICS', file: 'calendrier_AG.ics', items: 3, date: '2026-01-28 14:15', status: 'success'},
-                    {type: 'Email', file: 'Sync Gmail', items: 12, date: '2026-01-25 09:00', status: 'error'}
-                  ].map(imp => `
-                    <div class="flex items-center gap-4 p-4 bg-slate-800/50 rounded-lg">
-                      <div class="text-2xl">${imp.type === 'CSV' ? '📊' : imp.type === 'ICS' ? '📅' : '📧'}</div>
-                      <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                          <span class="text-white font-semibold">${imp.file}</span>
-                          <span class="px-2 py-1 ${imp.status === 'success' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} rounded text-xs">
-                            ${imp.status === 'success' ? '✓ Réussi' : '✗ Erreur'}
-                          </span>
-                        </div>
-                        <div class="flex items-center gap-3 text-xs text-slate-400">
-                          <span>${imp.items} éléments</span>
-                          <span>•</span>
-                          <span>${imp.date}</span>
-                        </div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-          ` : ''}
-
-          <!-- Legal Disclaimer -->
-          <div class="glass rounded-2xl p-6 bg-amber-500/5 border-amber-500/20">
-            <div class="flex items-start gap-4">
-              <div class="text-3xl flex-shrink-0">💡</div>
-              <div>
-                <h4 class="text-amber-400 font-bold mb-2">Important - Cadre légal</h4>
+          <!-- Action rapide : Informer les copropriétaires -->
+          <div class="glass rounded-xl p-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                  📢 Communication
+                </h3>
                 <p class="text-slate-300 text-sm">
-                  <strong>Realtix Syndic est un outil de suivi opérationnel et de communication.</strong><br/>
-                  Il ne remplace pas le logiciel de comptabilité réglementaire du syndic.
+                  Envoyez une mise à jour sur l'avancement de ce signalement à tous les copropriétaires concernés
                 </p>
               </div>
+              <button 
+                onclick="setState({showInformerCopro: true})"
+                class="ml-4 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105 flex items-center gap-2"
+              >
+                📢 Informer les copropriétaires
+              </button>
             </div>
           </div>
 
         </div>
       `;
     }
+
+    // A3) ONGLET JOURNAL D'ACTIVITÉ
+    function renderSyndicJournalActivite() {
+      // Données d'activité avec rôles
+      const activities = [
+        {
+          date: '06/02/2026',
+          time: '14:35',
+          action: 'Intervention planifiée pour le 10/02',
+          actor: 'Sophie Martin',
+          role: 'gestionnaire',
+          signalement: 'Fuite d\'eau - Appt 12B',
+          icon: '📅',
+          color: 'blue'
+        },
+        {
+          date: '05/02/2026',
+          time: '16:20',
+          action: 'Devis reçu - 450€ TTC',
+          actor: 'Plomberie Martin',
+          role: 'artisan',
+          signalement: 'Fuite d\'eau - Appt 12B',
+          icon: '📄',
+          color: 'green'
+        },
+        {
+          date: '05/02/2026',
+          time: '10:15',
+          action: 'Commentaire ajouté : "Intervention urgente requise"',
+          actor: 'Jean Dupont',
+          role: 'conseil',
+          signalement: 'Fuite d\'eau - Appt 12B',
+          icon: '💬',
+          color: 'purple'
+        },
+        {
+          date: '04/02/2026',
+          time: '09:45',
+          action: 'Devis demandé à Plomberie Martin',
+          actor: 'Sophie Martin',
+          role: 'gestionnaire',
+          signalement: 'Fuite d\'eau - Appt 12B',
+          icon: '📨',
+          color: 'amber'
+        },
+        {
+          date: '03/02/2026',
+          time: '18:30',
+          action: 'Signalement créé avec priorité HAUTE',
+          actor: 'Marie Dubois',
+          role: 'coproprietaire',
+          signalement: 'Fuite d\'eau - Appt 12B',
+          icon: '🚨',
+          color: 'red'
+        },
+        {
+          date: '03/02/2026',
+          time: '14:20',
+          action: 'Message envoyé à tous les copropriétaires',
+          actor: 'Sophie Martin',
+          role: 'gestionnaire',
+          signalement: 'Travaux façade',
+          icon: '📧',
+          color: 'blue'
+        },
+        {
+          date: '02/02/2026',
+          time: '11:00',
+          action: 'Intervention complétée',
+          actor: 'Électricité Dupont',
+          role: 'artisan',
+          signalement: 'Panne ascenseur',
+          icon: '✅',
+          color: 'green'
+        },
+        {
+          date: '01/02/2026',
+          time: '16:45',
+          action: 'Validation du budget annuel',
+          actor: 'Jean Dupont',
+          role: 'conseil',
+          signalement: 'Budget 2026',
+          icon: '💰',
+          color: 'purple'
+        }
+      ];
+
+      // Fonction pour obtenir le badge de rôle
+      const getRoleBadge = (role) => {
+        const roles = {
+          'gestionnaire': { label: 'Gestionnaire', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30', icon: '👔' },
+          'conseil': { label: 'Conseil syndical', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30', icon: '🏛️' },
+          'artisan': { label: 'Artisan', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30', icon: '🔧' },
+          'coproprietaire': { label: 'Copropriétaire', color: 'bg-green-500/20 text-green-400 border-green-500/30', icon: '🏠' }
+        };
+        return roles[role] || roles['coproprietaire'];
+      };
+
+      return `
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-white" style="font-family: 'Poppins', sans-serif;">
+              📖 Journal d'activité
+            </h2>
+            <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-all flex items-center gap-2">
+              📥 Exporter PDF
+            </button>
+          </div>
+
+          <!-- Filtres -->
+          <div class="glass rounded-xl p-4">
+            <div class="grid md:grid-cols-4 gap-3">
+              <select class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                <option>Tous les signalements</option>
+                <option>Fuite d'eau - Appt 12B</option>
+                <option>Travaux façade</option>
+                <option>Panne ascenseur</option>
+              </select>
+              <select class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                <option>Tous les rôles</option>
+                <option>👔 Gestionnaire</option>
+                <option>🏛️ Conseil syndical</option>
+                <option>🔧 Artisan</option>
+                <option>🏠 Copropriétaire</option>
+              </select>
+              <select class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                <option>Toutes les actions</option>
+                <option>Signalements</option>
+                <option>Devis</option>
+                <option>Interventions</option>
+                <option>Messages</option>
+              </select>
+              <input type="date" class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="space-y-4">
+            ${activities.map((activity, index) => {
+              const roleBadge = getRoleBadge(activity.role);
+              return `
+                <div class="glass rounded-xl p-5 hover:border-${activity.color}-400/50 transition-all" style="animation: slideInUp 0.4s ease-out ${index * 0.05}s both;">
+                  <div class="flex gap-4">
+                    <!-- Icône et ligne temporelle -->
+                    <div class="flex flex-col items-center">
+                      <div class="w-12 h-12 rounded-full bg-${activity.color}-500/20 border-2 border-${activity.color}-500/50 flex items-center justify-center text-2xl flex-shrink-0">
+                        ${activity.icon}
+                      </div>
+                      ${index < activities.length - 1 ? `
+                        <div class="w-0.5 flex-1 bg-slate-700 mt-2"></div>
+                      ` : ''}
+                    </div>
+
+                    <!-- Contenu -->
+                    <div class="flex-1 pb-4">
+                      <!-- Date et heure -->
+                      <div class="flex items-center gap-3 mb-2">
+                        <span class="text-slate-400 text-sm font-semibold">${activity.date}</span>
+                        <span class="text-slate-500 text-xs">${activity.time}</span>
+                      </div>
+
+                      <!-- Action -->
+                      <h3 class="text-white font-bold text-lg mb-2">${activity.action}</h3>
+
+                      <!-- Acteur avec badge de rôle -->
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-slate-400 text-sm">Par</span>
+                        <span class="text-white font-semibold text-sm">${activity.actor}</span>
+                        <span class="px-3 py-1 ${roleBadge.color} border rounded-full text-xs font-semibold flex items-center gap-1">
+                          ${roleBadge.icon} ${roleBadge.label}
+                        </span>
+                      </div>
+
+                      <!-- Signalement concerné -->
+                      <div class="flex items-center gap-2 mt-3">
+                        <span class="text-slate-500 text-xs">Concerne :</span>
+                        <span class="px-3 py-1 bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold">
+                          ${activity.signalement}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between mt-6">
+            <p class="text-slate-400 text-sm">
+              Affichage de ${activities.length} activités sur ${activities.length}
+            </p>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-all">
+                ← Précédent
+              </button>
+              <button class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-semibold transition-all">
+                Suivant →
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // B) ONGLET INTERVENTIONS
+    function renderSyndicInterventions() {
+      const interventions = state.syndic?.interventions || [];
+      
+      return `
+        <div class="space-y-4">
+          <h2 class="text-2xl font-bold text-white mb-4" style="font-family: 'Poppins', sans-serif;">
+            Planning des interventions
+          </h2>
+
+          <!-- Grille de cartes -->
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            ${interventions.length === 0 ? `
+              <div class="col-span-full text-center p-8 glass rounded-xl">
+                <p class="text-slate-400">Aucune intervention planifiée</p>
+              </div>
+            ` : interventions.map(inter => {
+              const copro = state.syndic.coproperties.find(c => c.id === inter.coproId);
+              const statusColors = {
+                'pending': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50',
+                'completed': 'bg-green-500/20 text-green-400 border-green-500/50',
+                'cancelled': 'bg-red-500/20 text-red-400 border-red-500/50'
+              };
+              
+              return `
+                <div class="glass rounded-xl p-6 hover:scale-105 transition-all border-2 ${statusColors[inter.status]}">
+                  <!-- En-tête -->
+                  <div class="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 class="text-lg font-bold text-white mb-1" style="font-family: 'Poppins', sans-serif;">
+                        ${inter.type}
+                      </h3>
+                      <p class="text-sm text-slate-400" style="font-family: 'Inter', sans-serif;">
+                        ${copro?.name || 'N/A'}
+                      </p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full ${statusColors[inter.status]} text-xs font-semibold">
+                      ${inter.status === 'pending' ? '🟡 En attente' : inter.status === 'completed' ? '✅ Terminé' : '❌ Annulé'}
+                    </span>
+                  </div>
+
+                  <!-- Détails -->
+                  <div class="space-y-2 mb-4">
+                    <div class="flex items-center gap-2 text-sm text-slate-300">
+                      <span>📅</span>
+                      <span style="font-family: 'Inter', sans-serif;">${new Date(inter.date).toLocaleDateString('fr-FR')}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-300">
+                      <span>📍</span>
+                      <span style="font-family: 'Inter', sans-serif;">${inter.description}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-300">
+                      <span>💰</span>
+                      <span class="font-semibold text-amber-400" style="font-family: 'Inter', sans-serif;">${inter.cost}€</span>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex gap-2">
+                    <button class="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-medium transition-all">
+                      Modifier
+                    </button>
+                    <button class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-all">
+                      📄
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // C) ONGLET COMMUNICATION
+    function renderSyndicCommunication() {
+      const messages = state.syndic?.messages || [];
+      const coproperties = state.syndic?.coproperties || [];
+      
+      return `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-white mb-4" style="font-family: 'Poppins', sans-serif;">
+            Communication copropriétaires
+          </h2>
+
+          <!-- Section Envoyer un message -->
+          <div class="glass rounded-xl p-6">
+            <h3 class="text-xl font-bold text-white mb-4" style="font-family: 'Poppins', sans-serif;">
+              📨 Envoyer un message
+            </h3>
+            
+            <div class="space-y-4">
+              <!-- Sélection Copropriété -->
+              <div>
+                <label class="block text-slate-300 font-medium mb-2" style="font-family: 'Inter', sans-serif;">
+                  🏢 Copropriété * <span class="text-slate-500 text-sm">(sélectionnez la résidence concernée)</span>
+                </label>
+                <select 
+                  onchange="setState({selectedCoproCommunication: parseInt(event.target.value)})"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                >
+                  <option value="">⚠️ Sélectionner une copropriété</option>
+                  ${coproperties.map(copro => `
+                    <option value="${copro.id}" ${state.selectedCoproCommunication === copro.id ? 'selected' : ''}>
+                      🏢 ${copro.name} - ${copro.residents || 0} résidents actifs
+                    </option>
+                  `).join('')}
+                </select>
+                ${state.selectedCoproCommunication ? `
+                  <div class="mt-2 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                    <p class="text-sm text-purple-300">
+                      ✓ Copropriété sélectionnée : <strong>${coproperties.find(c => c.id === state.selectedCoproCommunication)?.name}</strong>
+                    </p>
+                    <p class="text-xs text-purple-400 mt-1">
+                      👥 ${coproperties.find(c => c.id === state.selectedCoproCommunication)?.residents || 0} résidents recevront ce message
+                    </p>
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- Destinataires -->
+              <div>
+                <label class="block text-slate-300 font-medium mb-2" style="font-family: 'Inter', sans-serif;">
+                  Destinataires
+                </label>
+                <div class="grid grid-cols-3 gap-3">
+                  <button 
+                    onclick="setState({communicationRecipients: 'all'})"
+                    class="p-4 rounded-xl ${state.communicationRecipients === 'all' ? 'bg-purple-500 text-white border-2 border-purple-400' : 'bg-slate-700 text-white border-2 border-transparent'} hover:bg-slate-600 transition-all hover:border-amber-400"
+                  >
+                    <div class="text-2xl mb-2">👥</div>
+                    <div class="font-medium text-sm">Tous les copropriétaires</div>
+                  </button>
+                  <button 
+                    onclick="setState({communicationRecipients: 'conseil'})"
+                    class="p-4 rounded-xl ${state.communicationRecipients === 'conseil' ? 'bg-purple-500 text-white border-2 border-purple-400' : 'bg-slate-700 text-white border-2 border-transparent'} hover:bg-slate-600 transition-all hover:border-amber-400"
+                  >
+                    <div class="text-2xl mb-2">🏛️</div>
+                    <div class="font-medium text-sm">Conseil syndical</div>
+                  </button>
+                  <button 
+                    onclick="setState({communicationRecipients: 'specific'})"
+                    class="p-4 rounded-xl ${state.communicationRecipients === 'specific' ? 'bg-purple-500 text-white border-2 border-purple-400' : 'bg-slate-700 text-white border-2 border-transparent'} hover:bg-slate-600 transition-all hover:border-amber-400"
+                  >
+                    <div class="text-2xl mb-2">🏠</div>
+                    <div class="font-medium text-sm">Lot précis</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Objet du message -->
+              <div>
+                <label class="block text-slate-300 font-medium mb-2" style="font-family: 'Inter', sans-serif;">
+                  Objet *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex: Travaux de réfection de la toiture"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+              </div>
+
+              <!-- Message -->
+              <div>
+                <label class="block text-slate-300 font-medium mb-2" style="font-family: 'Inter', sans-serif;">
+                  Message *
+                </label>
+                <textarea
+                  placeholder="Rédigez votre message..."
+                  rows="6"
+                  class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+                ></textarea>
+              </div>
+
+              <!-- Pièces jointes -->
+              <div>
+                <label class="block text-slate-300 font-medium mb-2" style="font-family: 'Inter', sans-serif;">
+                  📎 Pièces jointes <span class="text-slate-500 text-sm">(optionnel - max 5 fichiers)</span>
+                </label>
+                <input type="file" multiple class="hidden" id="communication-attachments" onchange="displaySelectedFiles(event)" />
+                <label 
+                  for="communication-attachments" 
+                  class="flex items-center justify-center gap-3 w-full px-4 py-4 bg-slate-800 border-2 border-dashed border-slate-600 rounded-xl cursor-pointer hover:border-purple-400 hover:bg-slate-700 transition-all group"
+                >
+                  <svg class="w-6 h-6 text-slate-400 group-hover:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                  </svg>
+                  <span class="text-slate-400 group-hover:text-purple-400 font-medium">Cliquez pour ajouter des fichiers</span>
+                </label>
+                <p class="text-xs text-slate-500 mt-2">
+                  ✓ Formats acceptés : PDF, JPEG, PNG, DOCX • Max 10 Mo par fichier • Jusqu'à 5 fichiers
+                </p>
+                
+                <!-- Zone d'affichage des fichiers sélectionnés -->
+                <div id="selected-files-preview" class="mt-3 space-y-2 hidden">
+                  <p class="text-sm text-white font-semibold mb-2">📎 Fichiers sélectionnés :</p>
+                  <!-- Les fichiers apparaîtront ici dynamiquement -->
+                </div>
+                
+                <!-- Exemple de fichiers pour la démo -->
+                <div class="mt-3 space-y-2">
+                  <div class="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg border border-slate-600">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
+                        <span class="text-red-400 font-bold text-xs">PDF</span>
+                      </div>
+                      <div>
+                        <p class="text-white text-sm font-semibold">Règlement_copropriété.pdf</p>
+                        <p class="text-slate-400 text-xs">2.4 Mo</p>
+                      </div>
+                    </div>
+                    <button class="text-red-400 hover:text-red-300 p-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg border border-slate-600">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <span class="text-blue-400 font-bold text-xs">IMG</span>
+                      </div>
+                      <div>
+                        <p class="text-white text-sm font-semibold">Photo_travaux.jpg</p>
+                        <p class="text-slate-400 text-xs">1.8 Mo</p>
+                      </div>
+                    </div>
+                    <button class="text-red-400 hover:text-red-300 p-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modèles prêts -->
+              <div>
+                <label class="block text-slate-300 font-medium mb-2" style="font-family: 'Inter', sans-serif;">
+                  📋 Modèles prêts
+                </label>
+                <div class="grid grid-cols-2 gap-3">
+                  ${[
+                    {icon: '⏰', title: 'Retard travaux', desc: 'Informer d\'un report'},
+                    {icon: '✅', title: 'Devis accepté', desc: 'Validation effectuée'},
+                    {icon: '💧', title: 'Coupure d\'eau', desc: 'Maintenance programmée'},
+                    {icon: '📅', title: 'Rappel AG', desc: 'Assemblée générale'}
+                  ].map(model => `
+                    <button class="p-4 rounded-xl bg-slate-700 hover:bg-slate-600 text-left transition-all border-2 border-transparent hover:border-amber-400">
+                      <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">${model.icon}</span>
+                        <span class="text-white font-semibold">${model.title}</span>
+                      </div>
+                      <p class="text-sm text-slate-400">${model.desc}</p>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <button class="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold rounded-xl hover:scale-105 transition-all shadow-lg">
+                📨 Envoyer le message
+              </button>
+            </div>
+          </div>
+
+          <!-- Historique messages -->
+          <div class="glass rounded-xl p-6">
+            <h3 class="text-xl font-bold text-white mb-4" style="font-family: 'Poppins', sans-serif;">
+              📜 Historique des messages
+            </h3>
+            
+            <div class="space-y-3">
+              ${messages.length === 0 ? `
+                <p class="text-center text-slate-400 py-8">Aucun message envoyé</p>
+              ` : messages.map(msg => {
+                const readPercentage = Math.round((msg.readBy / msg.recipients) * 100);
+                const copro = coproperties.find(c => c.id === msg.coproId);
+                
+                return `
+                <div class="p-5 bg-slate-700/50 rounded-xl hover:bg-slate-700 transition-all border border-slate-600">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 mb-1">
+                        <h4 class="font-bold text-white text-lg">${msg.subject}</h4>
+                        ${msg.hasAttachments ? '<span class="text-amber-400 text-sm">📎</span>' : ''}
+                      </div>
+                      <p class="text-xs text-slate-400 mb-2">🏢 ${copro?.name || 'Copropriété'}</p>
+                    </div>
+                    <span class="text-xs text-slate-400">${new Date(msg.date).toLocaleDateString('fr-FR')}</span>
+                  </div>
+                  
+                  <p class="text-sm text-slate-300 mb-3">${msg.content.substring(0, 150)}...</p>
+                  
+                  <!-- Indicateur de lecture -->
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-slate-400">
+                        👥 ${msg.recipients} destinataires
+                      </span>
+                      <span class="${readPercentage >= 80 ? 'text-green-400' : readPercentage >= 50 ? 'text-amber-400' : 'text-red-400'} font-bold text-sm">
+                        ✓ ${msg.readBy} / ${msg.recipients} lus (${readPercentage}%)
+                      </span>
+                    </div>
+                    
+                    <!-- Barre de progression de lecture -->
+                    <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden border border-slate-700">
+                      <div 
+                        class="h-full ${readPercentage >= 80 ? 'bg-gradient-to-r from-green-500 to-green-400' : readPercentage >= 50 ? 'bg-gradient-to-r from-amber-500 to-amber-400' : 'bg-gradient-to-r from-red-500 to-red-400'} transition-all duration-500 flex items-center justify-end pr-2"
+                        style="width: ${readPercentage}%"
+                      >
+                        <span class="text-white text-xs font-bold">${readPercentage}%</span>
+                      </div>
+                    </div>
+                    
+                    <!-- Statut de lecture visuel -->
+                    <div class="flex items-center gap-2 text-xs">
+                      ${readPercentage >= 80 ? `
+                        <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full font-semibold">
+                          ✅ Excellente visibilité
+                        </span>
+                      ` : readPercentage >= 50 ? `
+                        <span class="px-2 py-1 bg-amber-500/20 text-amber-400 rounded-full font-semibold">
+                          ⚠️ Visibilité moyenne
+                        </span>
+                      ` : `
+                        <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded-full font-semibold">
+                          ❌ Faible visibilité
+                        </span>
+                      `}
+                    </div>
+                    
+                    <!-- Détails des non-lecteurs si faible taux -->
+                    ${readPercentage < 70 ? `
+                      <button 
+                        onclick="showNonReaders(${msg.id})" 
+                        class="text-xs text-amber-400 hover:text-amber-300 font-medium flex items-center gap-2 mt-2 px-3 py-2 bg-amber-500/10 rounded-lg hover:bg-amber-500/20 transition-all"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        Voir qui n'a pas encore lu (${msg.recipients - msg.readBy} personnes)
+                      </button>
+                    ` : ''}
+                  </div>
+                </div>
+              `}).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // D) ONGLET HISTORIQUE
+    function renderSyndicHistorique() {
+      const signalements = state.syndic?.signalements || [];
+      
+      return `
+        <div class="space-y-4">
+          <h2 class="text-2xl font-bold text-white mb-4" style="font-family: 'Poppins', sans-serif;">
+            Historique et traçabilité
+          </h2>
+
+          <div class="space-y-4">
+            ${signalements.length === 0 ? `
+              <div class="text-center p-8 glass rounded-xl">
+                <p class="text-slate-400">Aucun historique disponible</p>
+              </div>
+            ` : signalements.map(sig => {
+              const copro = state.syndic.coproperties.find(c => c.id === sig.coproId);
+              
+              return `
+                <div class="glass rounded-xl p-6">
+                  <div class="flex items-start gap-4">
+                    <div class="w-1 bg-amber-400 rounded-full"></div>
+                    <div class="flex-1">
+                      <div class="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 class="text-lg font-bold text-white mb-1">${sig.type} - ${copro?.name}</h3>
+                          <p class="text-sm text-slate-400">${sig.description}</p>
+                        </div>
+                        <span class="text-xs text-slate-500">${new Date(sig.date).toLocaleDateString('fr-FR')}</span>
+                      </div>
+
+                      <!-- Timeline -->
+                      <div class="space-y-3 pl-4 border-l-2 border-slate-700">
+                        ${(sig.timeline || []).map((event, idx) => `
+                          <div class="relative">
+                            <div class="absolute -left-[21px] w-3 h-3 rounded-full bg-amber-400"></div>
+                            <div class="ml-2">
+                              <div class="text-sm font-medium text-white">${event.action}</div>
+                              <div class="text-xs text-slate-400">${event.user} • ${new Date(event.date).toLocaleString('fr-FR')}</div>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+
+                      ${sig.comments && sig.comments.length > 0 ? `
+                        <div class="mt-4 pt-4 border-t border-slate-700">
+                          <div class="text-sm font-semibold text-slate-300 mb-2">💬 Commentaires</div>
+                          ${sig.comments.map(comment => `
+                            <div class="text-sm text-slate-400 mb-1">
+                              <span class="text-amber-400">${comment.author}:</span> ${comment.text}
+                            </div>
+                          `).join('')}
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
 
 
     function renderSettings() {
@@ -9351,7 +10217,7 @@
           
           <div class="relative z-10 flex w-full">
           <!-- Sidebar -->
-          <div class='${state.mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 w-72 bg-slate-800 border-r border-slate-700 p-6 transition-transform duration-300'>
+          <div class='${state.mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 w-72 bg-slate-800/30 backdrop-blur-md border-r border-slate-700/30 p-6 transition-transform duration-300'>
             <div class="flex items-center justify-between mb-8">
               <button onclick="setState({currentPage: 'dashboard', mobileMenuOpen: false})" class="flex items-center gap-3 hover:opacity-80 transition-all">
                 <div class="text-amber-400">${icons.aiLogo}</div>
@@ -9468,7 +10334,7 @@
           <!-- Main Content -->
           <div class="flex-1 flex flex-col">
             <!-- Top Bar -->
-            <div class="bg-slate-800 border-b border-slate-700 px-6 py-4">
+            <div class="bg-slate-800/30 backdrop-blur-md border-b border-slate-700/30 px-6 py-4">
               <div class="flex items-center justify-between">
                 <button onclick="setState({mobileMenuOpen: true})" class="md:hidden text-white">
                   ${icons.menu}
@@ -10779,6 +11645,27 @@
         toast.style.transform = 'translateX(100%)';
         setTimeout(() => toast.remove(), 300);
       }, 3000);
+    }
+
+    // ===== FONCTIONS CALLBACK POUR LES MODALS =====
+    function sendDevisRequest() {
+      showToast('📄 Demandes de devis envoyées avec succès !');
+    }
+
+    function assignArtisan() {
+      showToast('🔧 Artisan assigné avec succès !');
+    }
+
+    function sendMessage() {
+      showToast('💬 Message envoyé à tous les copropriétaires !');
+    }
+
+    function planifierIntervention() {
+      showToast('📅 Intervention planifiée avec succès !');
+    }
+
+    function informerCoproprieteaires() {
+      showToast('📢 Mise à jour envoyée à 45 copropriétaires avec succès !');
     }
 
     // Initial render with loading animation
